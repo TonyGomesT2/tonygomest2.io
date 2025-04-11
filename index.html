@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gris Quiz – Você conhece hardware?</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #f0f8ff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-image: url('https://cdn.pixabay.com/photo/2016/11/29/08/41/computer-1869236_640.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        
+        h1 {
+            color: #ff6b6b;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .intro-screen, .game-screen, .result-screen {
+            display: none;
+        }
+        
+        .intro-screen.active, .game-screen.active, .result-screen.active {
+            display: block;
+        }
+        
+        .intro-screen input {
+            padding: 12px;
+            font-size: 1.2em;
+            border: 3px solid #4dabf7;
+            border-radius: 10px;
+            margin: 15px 0;
+            width: 80%;
+            max-width: 400px;
+        }
+        
+        button {
+            background-color: #4dabf7;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+        
+        .question {
+            font-size: 1.5em;
+            margin: 20px 0;
+            color: #2b2d42;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .option {
+            background-color: #a5d8ff;
+            border: none;
+            padding: 15px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: rgba(165, 216, 255, 0.8);
+        }
+        
+        .option:hover {
+            background-color: #74c0fc;
+            transform: scale(1.02);
+        }
+        
+        .option.selected {
+            background-color: #4dabf7;
+            color: white;
+        }
+        
+        .confirm-btn {
+            background-color: #51cf66;
+        }
+        
+        .confirm-btn:hover {
+            background-color: #40c057;
+        }
+        
+        .confirm-btn:disabled {
+            background-color: #adb5bd;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .timer {
+            font-size: 1.5em;
+            color: #e03131;
+            margin: 10px 0;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .score {
+            font-size: 1.5em;
+            margin: 10px 0;
+            color: #2b8a3e;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .feedback {
+            font-size: 1.5em;
+            margin: 15px 0;
+            min-height: 40px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .correct {
+            color: #2b8a3e;
+            background-color: rgba(235, 251, 238, 0.8);
+        }
+        
+        .incorrect {
+            color: #e03131;
+            background-color: rgba(255, 245, 245, 0.8);
+        }
+        
+        .result-screen h2 {
+            color: #ff6b6b;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .final-score {
+            font-size: 2em;
+            color: #2b8a3e;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        
+        .emoji-result {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+        
+        .category-tag {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+            background-color: #ffe066;
+            color: #333;
+        }
+        
+        @media (max-width: 600px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .question {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Tela de Introdução -->
+        <div class="intro-screen active">
+            <h1>Gris Quiz – Você conhece hardware?</h1>
+            <p>Teste seus conhecimentos sobre computadores e o corpo humano!</p>
+            <img src="https://cdn-icons-png.flaticon.com/512/3439/3439971.png" alt="Computador" style="width: 80px; border-radius: 10px; margin: 10px 40; border: 3px solid #4dabf7;">
+            <input type="text" id="player-name" placeholder="Digite seu nome" required>
+            <button id="start-btn">Começar o Quiz!</button>
+        </div>
+        
+        <!-- Tela do Jogo -->
+        <div class="game-screen">
+            <div class="score">Pontuação: <span id="current-score">0</span></div>
+            <div class="timer">⏱️ Tempo: <span id="time-left">30</span>s</div>
+            <div class="category-tag" id="category-tag"></div>
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+            <button class="confirm-btn" id="confirm-btn" disabled>Confirmar Resposta</button>
+            <div class="feedback" id="feedback"></div>
+        </div>
+        
+        <!-- Tela de Resultados -->
+        <div class="result-screen">
+            <h2>Quiz Concluído!</h2>
+            <div class="emoji-result" id="emoji-result"></div>
+            <p id="player-result"></p>
+            <div class="final-score">Você acertou <span id="final-score">0</span> de 10 perguntas!</div>
+            <button id="restart-btn">Jogar Novamente</button>
+        </div>
+    </div>
+
+    <!-- Efeitos Sonoros -->
+    <audio id="correct-sound" src="https://www.soundjay.com/misc/sounds/magic-chime-02.mp3"></audio>
+    <audio id="wrong-sound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+    <audio id="timer-sound" src="https://www.soundjay.com/phone/sounds/telephone-ring-01b.mp3"></audio>
+    <audio id="start-sound" src="https://www.soundjay.com/buttons/sounds/button-16a.mp3"></audio>
+    <audio id="time-up-sound" src="https://www.soundjay.com/buttons/sounds/button-11.mp3"></audio>
+
+    <script>
+        // Elementos do DOM
+        const introScreen = document.querySelector('.intro-screen');
+        const gameScreen = document.querySelector('.game-screen');
+        const resultScreen = document.querySelector('.result-screen');
+        const playerNameInput = document.getElementById('player-name');
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const questionElement = document.getElementById('question');
+        const optionsContainer = document.getElementById('options');
+        const confirmBtn = document.getElementById('confirm-btn');
+        const feedbackElement = document.getElementById('feedback');
+        const currentScoreElement = document.getElementById('current-score');
+        const finalScoreElement = document.getElementById('final-score');
+        const playerResultElement = document.getElementById('player-result');
+        const timeLeftElement = document.getElementById('time-left');
+        const emojiResultElement = document.getElementById('emoji-result');
+        const categoryTagElement = document.getElementById('category-tag');
+        
+        // Efeitos sonoros
+        const correctSound = document.getElementById('correct-sound');
+        const wrongSound = document.getElementById('wrong-sound');
+        const timerSound = document.getElementById('timer-sound');
+        const startSound = document.getElementById('start-sound');
+        const timeUpSound = document.getElementById('time-up-sound');
+        
+        // Variáveis do jogo
+        let playerName = '';
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedOption = null;
+        let timer;
+        let timeLeft = 30;
+        let selectedQuestions = [];
+        
+        // Banco completo de perguntas (30 no total)
+        const allQuestions = [
+            // Analogias entre computador e corpo humano (15 perguntas)
+            {
+                question: "Qual parte do corpo humano é como o processador (CPU) do computador?",
+                options: ["Cérebro", "Coração", "Pulmões", "Estômago"],
+                answer: "Cérebro",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+            {
+                question: "A memória RAM é como qual parte do corpo humano?",
+                options: ["Memória de longo prazo", "Memória de curto prazo", "Neurônios", "Sistema digestivo"],
+                answer: "Memória de curto prazo",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+            {
+                question: "O disco rígido (HD) é comparado a qual parte do corpo?",
+                options: ["Músculos", "Memória de longo prazo", "Pele", "Ossos"],
+                answer: "Memória de longo prazo",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+            {
+                question: "A placa-mãe do computador é como qual sistema do corpo?",
+                options: ["Sistema Nervoso Central", "Sistema Circulatório", "Sistema Respiratório", "Sistema Digestivo"],
+                answer: "Sistema Nervoso Central",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+            {
+                question: "A placa de vídeo (GPU) é comparada a qual parte do corpo?",
+                options: ["Olhos", "Ouvidos", "Mãos", "Pés"],
+                answer: "Olhos",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+            {
+                question: "A fonte de alimentação do computador é como qual sistema do corpo?",
+                options: ["Sistema Digestivo", "Sistema Respiratório", "Sistema Esquelético", "Sistema Nervoso"],
+                answer: "Sistema Digestivo",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+            {
+                question: "O cooler (ventoinha) do computador é comparado a qual função do corpo?",
+                options: ["Suor", "Respiração", "Digestão", "Piscar de olhos"],
+                answer: "Suor",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+            {
+                question: "Os cabos que conectam os componentes do computador são como o quê no corpo?",
+                options: ["Nervos", "Vasos sanguíneos", "Músculos", "Tendões"],
+                answer: "Nervos",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+            {
+                question: "O teclado do computador é comparado a qual parte do corpo?",
+                options: ["Mãos", "Boca", "Pés", "Ouvidos"],
+                answer: "Mãos",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+            {
+                question: "O sistema operacional do computador é como o quê no corpo humano?",
+                options: ["Personalidade", "Sistema Imunológico", "Sistema Digestivo", "Sistema Esquelético"],
+                answer: "Personalidade",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+            {
+                question: "O mouse do computador é comparado a qual parte do corpo?",
+                options: ["Dedos", "Olhos", "Pés", "Nariz"],
+                answer: "Dedos",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+            {
+                question: "A internet é como qual sistema de comunicação do corpo?",
+                options: ["Sistema Nervoso", "Sistema Circulatório", "Sistema Linfático", "Sistema Digestivo"],
+                answer: "Sistema Nervoso",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+            {
+                question: "O antivírus do computador é como o quê no corpo humano?",
+                options: ["Sistema Imunológico", "Sistema Digestivo", "Sistema Respiratório", "Sistema Esquelético"],
+                answer: "Sistema Imunológico",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+            {
+                question: "A tela do computador é comparada a qual parte do corpo?",
+                options: ["Rosto", "Olhos", "Pele", "Cabelo"],
+                answer: "Rosto",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+            {
+                question: "Os aplicativos do computador são como o quê no corpo humano?",
+                options: ["Habilidades", "Órgãos", "Músculos", "Ossos"],
+                answer: "Habilidades",
+                category: "🤖 Analogia Computador-Corpo"
+            },
+
+            // Dispositivos de entrada e saída (15 perguntas)
+            {
+                question: "Qual destes é um dispositivo de ENTRADA?",
+                options: ["Monitor", "Teclado", "Caixa de som", "Impressora"],
+                answer: "Teclado",
+                category: "🖥️ Dispositivos Eletrônicos"
+            },
+            {
+                question: "Qual destes é um dispositivo de SAÍDA?",
+                options: ["Mouse", "Microfone", "Scanner", "Projetor"],
+                answer: "Projetor",
+                category: "🖥️ Dispositivos Eletrônicos"
+            },
+            {
+                question: "Qual dispositivo serve tanto para entrada quanto para saída?",
+                options: ["Impressora", "Monitor touchscreen", "Teclado", "Headset"],
+                answer: "Monitor touchscreen",
+                category: "🖥️ Dispositivos Eletrônicos"
+            },
+            {
+                question: "Qual NÃO é um dispositivo de entrada?",
+                options: ["Webcam", "Joystick", "Scanner", "Fones de ouvido"],
+                answer: "Fones de ouvido",
+                category: "🖥️ Dispositivos Eletrônicos"
+            },
+            {
+                question: "Qual destes dispositivos mostra informações visuais?",
+                options: ["Mouse", "Microfone", "Monitor", "Impressora"],
+                answer: "Monitor",
+                category: "🖥️ Dispositivos Eletrônicos"
+            },
+            {
+                question: "Qual dispositivo captura imagens para o computador?",
+                options: ["Impressora", "Scanner", "Caixa de som", "Projetor"],
+                answer: "Scanner",
+                category: "🖥️ Dispositivos Eletrônicos"
+            },
+            {
+                question: "Qual destes é usado para jogos no computador?",
+                options: ["Joystick", "Impressora", "Projetor", "Scanner"],
+                answer: "Joystick",
+                category: "🖥️ Dispositivos Eletrônicos"
+            },
+            {
+                question: "O que é necessário para ouvir sons do computador?",
+                options: ["Microfone", "Caixa de som", "Webcam", "Scanner"],
+                answer: "Caixa de som",
+                category: "🖥️ Dispositivos Eletrônicos"
+            },
+            {
+                question: "Qual dispositivo permite falar com o computador?",
+                options: ["Microfone", "Monitor", "Impressora", "Headset"],
+                answer: "Microfone",
+                category: "🖥️ Dispositivos Eletrônicos"
+            },
+            {
+                question: "Qual destes NÃO é um dispositivo de saída?",
+                options: ["Monitor", "Impressora", "Mouse", "Caixa de som"],
+                answer: "Mouse",
+                category: "🖥️ Dispositivos Eletrônicos"
+            },
+            {
+                question: "Qual dispositivo imprime documentos no papel?",
+                options: ["Scanner", "Impressora", "Plotter", "Monitor"],
+                answer: "Impressora",
+                category: "🖥️ Dispositivos Eletrônicos"
+            },
+            {
+                question: "Qual dispositivo é usado para digitalizar fotos?",
+                options: ["Webcam", "Scanner", "Impressora", "Microfone"],
+                answer: "Scanner",
+                category: "🖥️ Dispositivos Eletrônicos"
+            },
+            {
+                question: "Qual destes é um dispositivo de entrada para desenhar?",
+                options: ["Mesa digitalizadora", "Impressora", "Monitor", "Caixa de som"],
+                answer: "Mesa digitalizadora",
+                category: "🖥️ Dispositivos Eletrônicos"
+            },
+            {
+                question: "Qual dispositivo projeta imagens em uma parede?",
+                options: ["Monitor", "Televisão", "Projetor", "Tablet"],
+                answer: "Projetor",
+                category: "🖥️ Dispositivos Eletrônicos"
+            },
+            {
+                question: "Qual destes dispositivos guarda arquivos permanentemente?",
+                options: ["Memória RAM", "Pen Drive", "Processador", "Placa de vídeo"],
+                answer: "Pen Drive",
+                category: "🖥️ Dispositivos Eletrônicos"
+            }
+        ];
+        
+        // Selecionar 10 perguntas aleatórias
+        function selectRandomQuestions() {
+            // Embaralhar todas as perguntas
+            const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+            // Pegar as 10 primeiras
+            return shuffled.slice(0, 10);
+        }
+        
+        // Iniciar jogo
+        function startGame() {
+            playerName = playerNameInput.value.trim();
+            if (!playerName) {
+                alert("Por favor, digite seu nome!");
+                return;
+            }
+            
+            startSound.play();
+            selectedQuestions = selectRandomQuestions();
+            introScreen.classList.remove('active');
+            gameScreen.classList.add('active');
+            score = 0;
+            currentQuestionIndex = 0;
+            currentScoreElement.textContent = score;
+            showQuestion();
+        }
+        
+        // Mostrar pergunta atual
+        function showQuestion() {
+            if (currentQuestionIndex >= selectedQuestions.length) {
+                endGame();
+                return;
+            }
+            
+            const question = selectedQuestions[currentQuestionIndex];
+            questionElement.textContent = question.question;
+            categoryTagElement.textContent = question.category;
+            optionsContainer.innerHTML = '';
+            feedbackElement.textContent = '';
+            feedbackElement.className = 'feedback';
+            confirmBtn.disabled = true;
+            selectedOption = null;
+            timeLeft = 30;
+            timeLeftElement.textContent = timeLeft;
+            timeLeftElement.style.color = '#e03131';
+            
+            // Criar opções de resposta
+            question.options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option';
+                button.textContent = option;
+                button.addEventListener('click', () => selectOption(button, option));
+                optionsContainer.appendChild(button);
+            });
+            
+            // Iniciar temporizador
+            startTimer();
+        }
+        
+        // Selecionar opção
+        function selectOption(button, option) {
+            // Desselecionar todas as opções
+            document.querySelectorAll('.option').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Selecionar a opção clicada
+            button.classList.add('selected');
+            selectedOption = option;
+            confirmBtn.disabled = false;
+        }
+        
+        // Confirmar resposta
+        function confirmAnswer() {
+            if (selectedOption === null) return;
+            
+            clearInterval(timer);
+            const question = selectedQuestions[currentQuestionIndex];
+            const isCorrect = selectedOption === question.answer;
+            
+            // Atualizar pontuação e feedback
+            if (isCorrect) {
+                score++;
+                currentScoreElement.textContent = score;
+                feedbackElement.textContent = "✅ Resposta Correta!";
+                feedbackElement.className = 'feedback correct';
+                correctSound.play();
+            } else {
+                feedbackElement.textContent = `❌ Resposta Incorreta! O correto é: ${question.answer}`;
+                feedbackElement.className = 'feedback incorrect';
+                wrongSound.play();
+            }
+            
+            // Destacar respostas
+            document.querySelectorAll('.option').forEach(button => {
+                button.disabled = true;
+                if (button.textContent === question.answer) {
+                    button.style.backgroundColor = '#51cf66';
+                } else if (button.textContent === selectedOption) {
+                    button.style.backgroundColor = '#ff6b6b';
+                }
+            });
+            
+            confirmBtn.disabled = true;
+            
+            // Próxima pergunta após 2 segundos
+            setTimeout(() => {
+                currentQuestionIndex++;
+                showQuestion();
+            }, 2000);
+        }
+        
+        // Iniciar temporizador
+        function startTimer() {
+            clearInterval(timer); // Limpar timer anterior
+            
+            timer = setInterval(() => {
+                timeLeft--;
+                timeLeftElement.textContent = timeLeft;
+                
+                if (timeLeft <= 5) {
+                    timeLeftElement.style.color = '#e03131';
+                    if (timeLeft <= 3) {
+                        timerSound.play();
+                    }
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    timeUpSound.play();
+                    feedbackElement.textContent = "⏰ Tempo esgotado!";
+                    feedbackElement.className = 'feedback incorrect';
+                    
+                    // Mostrar resposta correta
+                    const correctAnswer = selectedQuestions[currentQuestionIndex].answer;
+                    document.querySelectorAll('.option').forEach(button => {
+                        if (button.textContent === correctAnswer) {
+                            button.style.backgroundColor = '#51cf66';
+                        }
+                    });
+                    
+                    setTimeout(() => {
+                        currentQuestionIndex++;
+                        showQuestion();
+                    }, 2000);
+                }
+            }, 1000);
+        }
+        
+        // Finalizar jogo
+        function endGame() {
+            clearInterval(timer);
+            gameScreen.classList.remove('active');
+            resultScreen.classList.add('active');
+            finalScoreElement.textContent = score;
+            playerResultElement.textContent = `${playerName}, você acertou ${score} de 10 perguntas!`;
+            
+            // Mostrar emoji baseado na pontuação
+            if (score >= 9) {
+                emojiResultElement.textContent = "🎉🌟👏 GENIAL!";
+            } else if (score >= 7) {
+                emojiResultElement.textContent = "👍😊 ÓTIMO TRABALHO!";
+            } else if (score >= 5) {
+                emojiResultElement.textContent = "🤔😅 FOI BEM!";
+            } else {
+                emojiResultElement.textContent = "😢💪 CONTINUE TENTANDO!";
+            }
+        }
+        
+        // Reiniciar jogo
+        function restartGame() {
+            resultScreen.classList.remove('active');
+            introScreen.classList.add('active');
+            playerNameInput.value = '';
+            playerNameInput.focus();
+        }
+        
+        // Event listeners
+        startBtn.addEventListener('click', startGame);
+        confirmBtn.addEventListener('click', confirmAnswer);
+        restartBtn.addEventListener('click', restartGame);
+        
+        // Permitir iniciar com Enter
+        playerNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                startGame();
+            }
+        });
+    </script>
+</body>
+</html>
