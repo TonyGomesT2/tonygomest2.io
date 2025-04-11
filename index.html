@@ -196,6 +196,22 @@
             color: #333;
         }
         
+        /* Estilos para o player de música */
+        audio {
+            display: none;
+        }
+        
+        #music-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            z-index: 100;
+        }
+        
         @media (max-width: 600px) {
             .options {
                 grid-template-columns: 1fr;
@@ -213,10 +229,27 @@
             .question {
                 font-size: 1.3em;
             }
+            
+            #music-toggle {
+                bottom: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2em;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Elemento de áudio para a música de fundo -->
+    <audio id="background-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        Seu navegador não suporta áudio.
+    </audio>
+
+    <!-- Botão de controle de música -->
+    <button id="music-toggle">🔇</button>
+
     <div class="container">
         <!-- Tela de Introdução -->
         <div class="intro-screen active">
@@ -273,13 +306,15 @@
         const timeLeftElement = document.getElementById('time-left');
         const emojiResultElement = document.getElementById('emoji-result');
         const categoryTagElement = document.getElementById('category-tag');
+        const musicToggleBtn = document.getElementById('music-toggle');
         
-        // Efeitos sonoros
+        // Elementos de áudio
         const correctSound = document.getElementById('correct-sound');
         const wrongSound = document.getElementById('wrong-sound');
         const timerSound = document.getElementById('timer-sound');
         const startSound = document.getElementById('start-sound');
         const timeUpSound = document.getElementById('time-up-sound');
+        const backgroundMusic = document.getElementById('background-music');
         
         // Variáveis do jogo
         let playerName = '';
@@ -289,6 +324,7 @@
         let timer;
         let timeLeft = 30;
         let selectedQuestions = [];
+        let isMusicPlaying = false;
         
         // Banco completo de perguntas (30 no total)
         const allQuestions = [
@@ -323,67 +359,7 @@
                 answer: "Olhos",
                 category: "🤖 Analogia Computador-Corpo"
             },
-            {
-                question: "A fonte de alimentação do computador é como qual sistema do corpo?",
-                options: ["Sistema Digestivo", "Sistema Respiratório", "Sistema Esquelético", "Sistema Nervoso"],
-                answer: "Sistema Digestivo",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-            {
-                question: "O cooler (ventoinha) do computador é comparado a qual função do corpo?",
-                options: ["Suor", "Respiração", "Digestão", "Piscar de olhos"],
-                answer: "Suor",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-            {
-                question: "Os cabos que conectam os componentes do computador são como o quê no corpo?",
-                options: ["Nervos", "Vasos sanguíneos", "Músculos", "Tendões"],
-                answer: "Nervos",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-            {
-                question: "O teclado do computador é comparado a qual parte do corpo?",
-                options: ["Mãos", "Boca", "Pés", "Ouvidos"],
-                answer: "Mãos",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-            {
-                question: "O sistema operacional do computador é como o quê no corpo humano?",
-                options: ["Personalidade", "Sistema Imunológico", "Sistema Digestivo", "Sistema Esquelético"],
-                answer: "Personalidade",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-            {
-                question: "O mouse do computador é comparado a qual parte do corpo?",
-                options: ["Dedos", "Olhos", "Pés", "Nariz"],
-                answer: "Dedos",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-            {
-                question: "A internet é como qual sistema de comunicação do corpo?",
-                options: ["Sistema Nervoso", "Sistema Circulatório", "Sistema Linfático", "Sistema Digestivo"],
-                answer: "Sistema Nervoso",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-            {
-                question: "O antivírus do computador é como o quê no corpo humano?",
-                options: ["Sistema Imunológico", "Sistema Digestivo", "Sistema Respiratório", "Sistema Esquelético"],
-                answer: "Sistema Imunológico",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-            {
-                question: "A tela do computador é comparada a qual parte do corpo?",
-                options: ["Rosto", "Olhos", "Pele", "Cabelo"],
-                answer: "Rosto",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-            {
-                question: "Os aplicativos do computador são como o quê no corpo humano?",
-                options: ["Habilidades", "Órgãos", "Músculos", "Ossos"],
-                answer: "Habilidades",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-
+            
             // Dispositivos de entrada e saída (15 perguntas)
             {
                 question: "Qual destes é um dispositivo de ENTRADA?",
@@ -414,75 +390,35 @@
                 options: ["Mouse", "Microfone", "Monitor", "Impressora"],
                 answer: "Monitor",
                 category: "🖥️ Dispositivos Eletrônicos"
-            },
-            {
-                question: "Qual dispositivo captura imagens para o computador?",
-                options: ["Impressora", "Scanner", "Caixa de som", "Projetor"],
-                answer: "Scanner",
-                category: "🖥️ Dispositivos Eletrônicos"
-            },
-            {
-                question: "Qual destes é usado para jogos no computador?",
-                options: ["Joystick", "Impressora", "Projetor", "Scanner"],
-                answer: "Joystick",
-                category: "🖥️ Dispositivos Eletrônicos"
-            },
-            {
-                question: "O que é necessário para ouvir sons do computador?",
-                options: ["Microfone", "Caixa de som", "Webcam", "Scanner"],
-                answer: "Caixa de som",
-                category: "🖥️ Dispositivos Eletrônicos"
-            },
-            {
-                question: "Qual dispositivo permite falar com o computador?",
-                options: ["Microfone", "Monitor", "Impressora", "Headset"],
-                answer: "Microfone",
-                category: "🖥️ Dispositivos Eletrônicos"
-            },
-            {
-                question: "Qual destes NÃO é um dispositivo de saída?",
-                options: ["Monitor", "Impressora", "Mouse", "Caixa de som"],
-                answer: "Mouse",
-                category: "🖥️ Dispositivos Eletrônicos"
-            },
-            {
-                question: "Qual dispositivo imprime documentos no papel?",
-                options: ["Scanner", "Impressora", "Plotter", "Monitor"],
-                answer: "Impressora",
-                category: "🖥️ Dispositivos Eletrônicos"
-            },
-            {
-                question: "Qual dispositivo é usado para digitalizar fotos?",
-                options: ["Webcam", "Scanner", "Impressora", "Microfone"],
-                answer: "Scanner",
-                category: "🖥️ Dispositivos Eletrônicos"
-            },
-            {
-                question: "Qual destes é um dispositivo de entrada para desenhar?",
-                options: ["Mesa digitalizadora", "Impressora", "Monitor", "Caixa de som"],
-                answer: "Mesa digitalizadora",
-                category: "🖥️ Dispositivos Eletrônicos"
-            },
-            {
-                question: "Qual dispositivo projeta imagens em uma parede?",
-                options: ["Monitor", "Televisão", "Projetor", "Tablet"],
-                answer: "Projetor",
-                category: "🖥️ Dispositivos Eletrônicos"
-            },
-            {
-                question: "Qual destes dispositivos guarda arquivos permanentemente?",
-                options: ["Memória RAM", "Pen Drive", "Processador", "Placa de vídeo"],
-                answer: "Pen Drive",
-                category: "🖥️ Dispositivos Eletrônicos"
             }
         ];
         
         // Selecionar 10 perguntas aleatórias
         function selectRandomQuestions() {
-            // Embaralhar todas as perguntas
             const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
-            // Pegar as 10 primeiras
             return shuffled.slice(0, 10);
+        }
+        
+        // Controle de música de fundo
+        function toggleMusic() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play()
+                    .then(() => {
+                        musicToggleBtn.textContent = "🔊";
+                        isMusicPlaying = true;
+                    })
+                    .catch(e => {
+                        console.log("Autoplay bloqueado: " + e);
+                        // Mostra alerta só se o jogo já começou
+                        if (gameScreen.classList.contains('active')) {
+                            alert("Clique no botão de som para ativar a música!");
+                        }
+                    });
+            } else {
+                backgroundMusic.pause();
+                musicToggleBtn.textContent = "🔇";
+                isMusicPlaying = false;
+            }
         }
         
         // Iniciar jogo
@@ -500,6 +436,13 @@
             score = 0;
             currentQuestionIndex = 0;
             currentScoreElement.textContent = score;
+            
+            // Configura a música de fundo
+            backgroundMusic.volume = 0.3; // 30% do volume
+            if (isMusicPlaying) {
+                backgroundMusic.play().catch(e => console.log("Autoplay bloqueado: " + e));
+            }
+            
             showQuestion();
         }
         
@@ -537,12 +480,10 @@
         
         // Selecionar opção
         function selectOption(button, option) {
-            // Desselecionar todas as opções
             document.querySelectorAll('.option').forEach(btn => {
                 btn.classList.remove('selected');
             });
             
-            // Selecionar a opção clicada
             button.classList.add('selected');
             selectedOption = option;
             confirmBtn.disabled = false;
@@ -556,7 +497,6 @@
             const question = selectedQuestions[currentQuestionIndex];
             const isCorrect = selectedOption === question.answer;
             
-            // Atualizar pontuação e feedback
             if (isCorrect) {
                 score++;
                 currentScoreElement.textContent = score;
@@ -569,7 +509,6 @@
                 wrongSound.play();
             }
             
-            // Destacar respostas
             document.querySelectorAll('.option').forEach(button => {
                 button.disabled = true;
                 if (button.textContent === question.answer) {
@@ -581,7 +520,6 @@
             
             confirmBtn.disabled = true;
             
-            // Próxima pergunta após 2 segundos
             setTimeout(() => {
                 currentQuestionIndex++;
                 showQuestion();
@@ -590,7 +528,7 @@
         
         // Iniciar temporizador
         function startTimer() {
-            clearInterval(timer); // Limpar timer anterior
+            clearInterval(timer);
             
             timer = setInterval(() => {
                 timeLeft--;
@@ -609,7 +547,6 @@
                     feedbackElement.textContent = "⏰ Tempo esgotado!";
                     feedbackElement.className = 'feedback incorrect';
                     
-                    // Mostrar resposta correta
                     const correctAnswer = selectedQuestions[currentQuestionIndex].answer;
                     document.querySelectorAll('.option').forEach(button => {
                         if (button.textContent === correctAnswer) {
@@ -628,12 +565,16 @@
         // Finalizar jogo
         function endGame() {
             clearInterval(timer);
+            
+            // Para a música de fundo
+            backgroundMusic.pause();
+            backgroundMusic.currentTime = 0;
+            
             gameScreen.classList.remove('active');
             resultScreen.classList.add('active');
             finalScoreElement.textContent = score;
             playerResultElement.textContent = `${playerName}, você acertou ${score} de 10 perguntas!`;
             
-            // Mostrar emoji baseado na pontuação
             if (score >= 9) {
                 emojiResultElement.textContent = "🎉🌟👏 GENIAL!";
             } else if (score >= 7) {
@@ -651,12 +592,19 @@
             introScreen.classList.add('active');
             playerNameInput.value = '';
             playerNameInput.focus();
+            
+            // Reinicia a música se estava tocando
+            if (isMusicPlaying) {
+                backgroundMusic.currentTime = 0;
+                backgroundMusic.play().catch(e => console.log(e));
+            }
         }
         
         // Event listeners
         startBtn.addEventListener('click', startGame);
         confirmBtn.addEventListener('click', confirmAnswer);
         restartBtn.addEventListener('click', restartGame);
+        musicToggleBtn.addEventListener('click', toggleMusic);
         
         // Permitir iniciar com Enter
         playerNameInput.addEventListener('keypress', (e) => {
@@ -664,6 +612,23 @@
                 startGame();
             }
         });
+        
+        // Tentar iniciar a música quando o usuário interagir com a página
+        document.addEventListener('click', function firstInteraction() {
+            // Toca a música com volume zero só para "destravar" o autoplay
+            backgroundMusic.volume = 0;
+            backgroundMusic.play()
+                .then(() => {
+                    backgroundMusic.pause();
+                    backgroundMusic.volume = 0.3;
+                    isMusicPlaying = false;
+                    musicToggleBtn.textContent = "🔇";
+                })
+                .catch(e => console.log("Autoplay requer interação: " + e));
+            
+            // Remove o listener após a primeira interação
+            document.removeEventListener('click', firstInteraction);
+        }, { once: true });
     </script>
 </body>
 </html>
