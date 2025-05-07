@@ -1,634 +1,94 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gris Quiz – Você conhece hardware?</title>
-    <style>
-        body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background-color: #f0f8ff;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            color: #333;
-            background-image: url('https://cdn.pixabay.com/photo/2016/11/29/08/41/computer-1869236_640.jpg');
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: center;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(5px);
-        }
-        
-        h1 {
-            color: #ff6b6b;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .intro-screen, .game-screen, .result-screen {
-            display: none;
-        }
-        
-        .intro-screen.active, .game-screen.active, .result-screen.active {
-            display: block;
-        }
-        
-        .intro-screen input {
-            padding: 12px;
-            font-size: 1.2em;
-            border: 3px solid #4dabf7;
-            border-radius: 10px;
-            margin: 15px 0;
-            width: 80%;
-            max-width: 400px;
-        }
-        
-        button {
-            background-color: #4dabf7;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 1.2em;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 10px 5px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-        }
-        
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-        }
-        
-        .question {
-            font-size: 1.5em;
-            margin: 20px 0;
-            color: #2b2d42;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(255, 255, 255, 0.7);
-            padding: 15px;
-            border-radius: 10px;
-        }
-        
-        .options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .option {
-            background-color: #a5d8ff;
-            border: none;
-            padding: 15px;
-            font-size: 1.1em;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            background-color: rgba(165, 216, 255, 0.8);
-        }
-        
-        .option:hover {
-            background-color: #74c0fc;
-            transform: scale(1.02);
-        }
-        
-        .option.selected {
-            background-color: #4dabf7;
-            color: white;
-        }
-        
-        .confirm-btn {
-            background-color: #51cf66;
-        }
-        
-        .confirm-btn:hover {
-            background-color: #40c057;
-        }
-        
-        .confirm-btn:disabled {
-            background-color: #adb5bd;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .timer {
-            font-size: 1.5em;
-            color: #e03131;
-            margin: 10px 0;
-            font-weight: bold;
-            background-color: rgba(255, 255, 255, 0.7);
-            padding: 5px 10px;
-            border-radius: 20px;
-            display: inline-block;
-        }
-        
-        .score {
-            font-size: 1.5em;
-            margin: 10px 0;
-            color: #2b8a3e;
-            font-weight: bold;
-            background-color: rgba(255, 255, 255, 0.7);
-            padding: 5px 10px;
-            border-radius: 20px;
-            display: inline-block;
-        }
-        
-        .feedback {
-            font-size: 1.5em;
-            margin: 15px 0;
-            min-height: 40px;
-            padding: 10px;
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .correct {
-            color: #2b8a3e;
-            background-color: rgba(235, 251, 238, 0.8);
-        }
-        
-        .incorrect {
-            color: #e03131;
-            background-color: rgba(255, 245, 245, 0.8);
-        }
-        
-        .result-screen h2 {
-            color: #ff6b6b;
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-        
-        .final-score {
-            font-size: 2em;
-            color: #2b8a3e;
-            margin: 20px 0;
-            font-weight: bold;
-        }
-        
-        .emoji-result {
-            font-size: 3em;
-            margin: 20px 0;
-        }
-        
-        .category-tag {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            margin-bottom: 10px;
-            background-color: #ffe066;
-            color: #333;
-        }
-        
-        /* Estilos para o player de música */
-        audio {
-            display: none;
-        }
-        
-        #music-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 1.5em;
-            z-index: 100;
-        }
-        
-        @media (max-width: 600px) {
-            .options {
-                grid-template-columns: 1fr;
-            }
-            
-            .container {
-                margin: 10px;
-                padding: 15px;
-            }
-            
-            h1 {
-                font-size: 2em;
-            }
-            
-            .question {
-                font-size: 1.3em;
-            }
-            
-            #music-toggle {
-                bottom: 10px;
-                right: 10px;
-                width: 40px;
-                height: 40px;
-                font-size: 1.2em;
-            }
-        }
-    </style>
+    <title>Tony Gomes | Portfólio</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Elemento de áudio para a música de fundo -->
-    <audio id="background-music" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        Seu navegador não suporta áudio.
-    </audio>
-
-    <!-- Botão de controle de música -->
-    <button id="music-toggle">🔇</button>
-
-    <div class="container">
-        <!-- Tela de Introdução -->
-        <div class="intro-screen active">
-            <h1>Gris Quiz – Você conhece hardware?</h1>
-            <p>Teste seus conhecimentos sobre computadores e o corpo humano!</p>
-            <img src="https://cdn-icons-png.flaticon.com/512/3439/3439971.png" alt="Computador" style="width: 80px; border-radius: 10px; margin: 10px 40; border: 3px solid #4dabf7;">
-            <input type="text" id="player-name" placeholder="Digite seu nome" required>
-            <button id="start-btn">Começar o Quiz!</button>
+    <header>
+        <div class="container header-content">
+            <div class="logo">ComputaKIDS</div>
+            <nav>
+                <ul>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#games">Games</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                </ul>
+            </nav>
         </div>
-        
-        <!-- Tela do Jogo -->
-        <div class="game-screen">
-            <div class="score">Pontuação: <span id="current-score">0</span></div>
-            <div class="timer">⏱️ Tempo: <span id="time-left">30</span>s</div>
-            <div class="category-tag" id="category-tag"></div>
-            <div class="question" id="question"></div>
-            <div class="options" id="options"></div>
-            <button class="confirm-btn" id="confirm-btn" disabled>Confirmar Resposta</button>
-            <div class="feedback" id="feedback"></div>
-        </div>
-        
-        <!-- Tela de Resultados -->
-        <div class="result-screen">
-            <h2>Quiz Concluído!</h2>
-            <div class="emoji-result" id="emoji-result"></div>
-            <p id="player-result"></p>
-            <div class="final-score">Você acertou <span id="final-score">0</span> de 10 perguntas!</div>
-            <button id="restart-btn">Jogar Novamente</button>
-        </div>
-    </div>
+    </header>
 
-    <!-- Efeitos Sonoros -->
-    <audio id="correct-sound" src="https://www.soundjay.com/misc/sounds/magic-chime-02.mp3"></audio>
-    <audio id="wrong-sound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
-    <audio id="timer-sound" src="https://www.soundjay.com/phone/sounds/telephone-ring-01b.mp3"></audio>
-    <audio id="start-sound" src="https://www.soundjay.com/buttons/sounds/button-16a.mp3"></audio>
-    <audio id="time-up-sound" src="https://www.soundjay.com/buttons/sounds/button-11.mp3"></audio>
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>Olá. Meu nome é<br>Tony Gomes</h1>
+                <p>Sou professor de computação para crianças</p>
+                <a href="#games" class="btn-primary">Games</a>
+                <a href="#contato" class="btn-primary">Fale comigo</a>
+            </div>
+            <div class="hero-img">
+                <img src="https://i.imgur.com/aMrMZ8M.png" alt="Tony Gomes">
+            </div>
+        </div>
+    </section>
 
-    <script>
-        // Elementos do DOM
-        const introScreen = document.querySelector('.intro-screen');
-        const gameScreen = document.querySelector('.game-screen');
-        const resultScreen = document.querySelector('.result-screen');
-        const playerNameInput = document.getElementById('player-name');
-        const startBtn = document.getElementById('start-btn');
-        const restartBtn = document.getElementById('restart-btn');
-        const questionElement = document.getElementById('question');
-        const optionsContainer = document.getElementById('options');
-        const confirmBtn = document.getElementById('confirm-btn');
-        const feedbackElement = document.getElementById('feedback');
-        const currentScoreElement = document.getElementById('current-score');
-        const finalScoreElement = document.getElementById('final-score');
-        const playerResultElement = document.getElementById('player-result');
-        const timeLeftElement = document.getElementById('time-left');
-        const emojiResultElement = document.getElementById('emoji-result');
-        const categoryTagElement = document.getElementById('category-tag');
-        const musicToggleBtn = document.getElementById('music-toggle');
-        
-        // Elementos de áudio
-        const correctSound = document.getElementById('correct-sound');
-        const wrongSound = document.getElementById('wrong-sound');
-        const timerSound = document.getElementById('timer-sound');
-        const startSound = document.getElementById('start-sound');
-        const timeUpSound = document.getElementById('time-up-sound');
-        const backgroundMusic = document.getElementById('background-music');
-        
-        // Variáveis do jogo
-        let playerName = '';
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let selectedOption = null;
-        let timer;
-        let timeLeft = 30;
-        let selectedQuestions = [];
-        let isMusicPlaying = false;
-        
-        // Banco completo de perguntas (30 no total)
-        const allQuestions = [
-            // Analogias entre computador e corpo humano (15 perguntas)
-            {
-                question: "Qual parte do corpo humano é como o processador (CPU) do computador?",
-                options: ["Cérebro", "Coração", "Pulmões", "Estômago"],
-                answer: "Cérebro",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-            {
-                question: "A memória RAM é como qual parte do corpo humano?",
-                options: ["Memória de longo prazo", "Memória de curto prazo", "Neurônios", "Sistema digestivo"],
-                answer: "Memória de curto prazo",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-            {
-                question: "O disco rígido (HD) é comparado a qual parte do corpo?",
-                options: ["Músculos", "Memória de longo prazo", "Pele", "Ossos"],
-                answer: "Memória de longo prazo",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-            {
-                question: "A placa-mãe do computador é como qual sistema do corpo?",
-                options: ["Sistema Nervoso Central", "Sistema Circulatório", "Sistema Respiratório", "Sistema Digestivo"],
-                answer: "Sistema Nervoso Central",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-            {
-                question: "A placa de vídeo (GPU) é comparada a qual parte do corpo?",
-                options: ["Olhos", "Ouvidos", "Mãos", "Pés"],
-                answer: "Olhos",
-                category: "🤖 Analogia Computador-Corpo"
-            },
-            
-            // Dispositivos de entrada e saída (15 perguntas)
-            {
-                question: "Qual destes é um dispositivo de ENTRADA?",
-                options: ["Monitor", "Teclado", "Caixa de som", "Impressora"],
-                answer: "Teclado",
-                category: "🖥️ Dispositivos Eletrônicos"
-            },
-            {
-                question: "Qual destes é um dispositivo de SAÍDA?",
-                options: ["Mouse", "Microfone", "Scanner", "Projetor"],
-                answer: "Projetor",
-                category: "🖥️ Dispositivos Eletrônicos"
-            },
-            {
-                question: "Qual dispositivo serve tanto para entrada quanto para saída?",
-                options: ["Impressora", "Monitor touchscreen", "Teclado", "Headset"],
-                answer: "Monitor touchscreen",
-                category: "🖥️ Dispositivos Eletrônicos"
-            },
-            {
-                question: "Qual NÃO é um dispositivo de entrada?",
-                options: ["Webcam", "Joystick", "Scanner", "Fones de ouvido"],
-                answer: "Fones de ouvido",
-                category: "🖥️ Dispositivos Eletrônicos"
-            },
-            {
-                question: "Qual destes dispositivos mostra informações visuais?",
-                options: ["Mouse", "Microfone", "Monitor", "Impressora"],
-                answer: "Monitor",
-                category: "🖥️ Dispositivos Eletrônicos"
-            }
-        ];
-        
-        // Selecionar 10 perguntas aleatórias
-        function selectRandomQuestions() {
-            const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, 10);
-        }
-        
-        // Controle de música de fundo
-        function toggleMusic() {
-            if (backgroundMusic.paused) {
-                backgroundMusic.play()
-                    .then(() => {
-                        musicToggleBtn.textContent = "🔊";
-                        isMusicPlaying = true;
-                    })
-                    .catch(e => {
-                        console.log("Autoplay bloqueado: " + e);
-                        // Mostra alerta só se o jogo já começou
-                        if (gameScreen.classList.contains('active')) {
-                            alert("Clique no botão de som para ativar a música!");
-                        }
-                    });
-            } else {
-                backgroundMusic.pause();
-                musicToggleBtn.textContent = "🔇";
-                isMusicPlaying = false;
-            }
-        }
-        
-        // Iniciar jogo
-        function startGame() {
-            playerName = playerNameInput.value.trim();
-            if (!playerName) {
-                alert("Por favor, digite seu nome!");
-                return;
-            }
-            
-            startSound.play();
-            selectedQuestions = selectRandomQuestions();
-            introScreen.classList.remove('active');
-            gameScreen.classList.add('active');
-            score = 0;
-            currentQuestionIndex = 0;
-            currentScoreElement.textContent = score;
-            
-            // Configura a música de fundo
-            backgroundMusic.volume = 0.3; // 30% do volume
-            if (isMusicPlaying) {
-                backgroundMusic.play().catch(e => console.log("Autoplay bloqueado: " + e));
-            }
-            
-            showQuestion();
-        }
-        
-        // Mostrar pergunta atual
-        function showQuestion() {
-            if (currentQuestionIndex >= selectedQuestions.length) {
-                endGame();
-                return;
-            }
-            
-            const question = selectedQuestions[currentQuestionIndex];
-            questionElement.textContent = question.question;
-            categoryTagElement.textContent = question.category;
-            optionsContainer.innerHTML = '';
-            feedbackElement.textContent = '';
-            feedbackElement.className = 'feedback';
-            confirmBtn.disabled = true;
-            selectedOption = null;
-            timeLeft = 30;
-            timeLeftElement.textContent = timeLeft;
-            timeLeftElement.style.color = '#e03131';
-            
-            // Criar opções de resposta
-            question.options.forEach(option => {
-                const button = document.createElement('button');
-                button.className = 'option';
-                button.textContent = option;
-                button.addEventListener('click', () => selectOption(button, option));
-                optionsContainer.appendChild(button);
-            });
-            
-            // Iniciar temporizador
-            startTimer();
-        }
-        
-        // Selecionar opção
-        function selectOption(button, option) {
-            document.querySelectorAll('.option').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            
-            button.classList.add('selected');
-            selectedOption = option;
-            confirmBtn.disabled = false;
-        }
-        
-        // Confirmar resposta
-        function confirmAnswer() {
-            if (selectedOption === null) return;
-            
-            clearInterval(timer);
-            const question = selectedQuestions[currentQuestionIndex];
-            const isCorrect = selectedOption === question.answer;
-            
-            if (isCorrect) {
-                score++;
-                currentScoreElement.textContent = score;
-                feedbackElement.textContent = "✅ Resposta Correta!";
-                feedbackElement.className = 'feedback correct';
-                correctSound.play();
-            } else {
-                feedbackElement.textContent = `❌ Resposta Incorreta! O correto é: ${question.answer}`;
-                feedbackElement.className = 'feedback incorrect';
-                wrongSound.play();
-            }
-            
-            document.querySelectorAll('.option').forEach(button => {
-                button.disabled = true;
-                if (button.textContent === question.answer) {
-                    button.style.backgroundColor = '#51cf66';
-                } else if (button.textContent === selectedOption) {
-                    button.style.backgroundColor = '#ff6b6b';
-                }
-            });
-            
-            confirmBtn.disabled = true;
-            
-            setTimeout(() => {
-                currentQuestionIndex++;
-                showQuestion();
-            }, 2000);
-        }
-        
-        // Iniciar temporizador
-        function startTimer() {
-            clearInterval(timer);
-            
-            timer = setInterval(() => {
-                timeLeft--;
-                timeLeftElement.textContent = timeLeft;
-                
-                if (timeLeft <= 5) {
-                    timeLeftElement.style.color = '#e03131';
-                    if (timeLeft <= 3) {
-                        timerSound.play();
-                    }
-                }
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    timeUpSound.play();
-                    feedbackElement.textContent = "⏰ Tempo esgotado!";
-                    feedbackElement.className = 'feedback incorrect';
-                    
-                    const correctAnswer = selectedQuestions[currentQuestionIndex].answer;
-                    document.querySelectorAll('.option').forEach(button => {
-                        if (button.textContent === correctAnswer) {
-                            button.style.backgroundColor = '#51cf66';
-                        }
-                    });
-                    
-                    setTimeout(() => {
-                        currentQuestionIndex++;
-                        showQuestion();
-                    }, 2000);
-                }
-            }, 1000);
-        }
-        
-        // Finalizar jogo
-        function endGame() {
-            clearInterval(timer);
-            
-            // Para a música de fundo
-            backgroundMusic.pause();
-            backgroundMusic.currentTime = 0;
-            
-            gameScreen.classList.remove('active');
-            resultScreen.classList.add('active');
-            finalScoreElement.textContent = score;
-            playerResultElement.textContent = `${playerName}, você acertou ${score} de 10 perguntas!`;
-            
-            if (score >= 9) {
-                emojiResultElement.textContent = "🎉🌟👏 GENIAL!";
-            } else if (score >= 7) {
-                emojiResultElement.textContent = "👍😊 ÓTIMO TRABALHO!";
-            } else if (score >= 5) {
-                emojiResultElement.textContent = "🤔😅 FOI BEM!";
-            } else {
-                emojiResultElement.textContent = "😢💪 CONTINUE TENTANDO!";
-            }
-        }
-        
-        // Reiniciar jogo
-        function restartGame() {
-            resultScreen.classList.remove('active');
-            introScreen.classList.add('active');
-            playerNameInput.value = '';
-            playerNameInput.focus();
-            
-            // Reinicia a música se estava tocando
-            if (isMusicPlaying) {
-                backgroundMusic.currentTime = 0;
-                backgroundMusic.play().catch(e => console.log(e));
-            }
-        }
-        
-        // Event listeners
-        startBtn.addEventListener('click', startGame);
-        confirmBtn.addEventListener('click', confirmAnswer);
-        restartBtn.addEventListener('click', restartGame);
-        musicToggleBtn.addEventListener('click', toggleMusic);
-        
-        // Permitir iniciar com Enter
-        playerNameInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                startGame();
-            }
-        });
-        
-        // Tentar iniciar a música quando o usuário interagir com a página
-        document.addEventListener('click', function firstInteraction() {
-            // Toca a música com volume zero só para "destravar" o autoplay
-            backgroundMusic.volume = 0;
-            backgroundMusic.play()
-                .then(() => {
-                    backgroundMusic.pause();
-                    backgroundMusic.volume = 0.3;
-                    isMusicPlaying = false;
-                    musicToggleBtn.textContent = "🔇";
-                })
-                .catch(e => console.log("Autoplay requer interação: " + e));
-            
-            // Remove o listener após a primeira interação
-            document.removeEventListener('click', firstInteraction);
-        }, { once: true });
-    </script>
+    <section id="sobre" class="sobre">
+        <div class="container">
+            <h2>Sobre Mim</h2>
+            <p>
+                lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quae.
+            </p>
+        </div>
+    </section>
+
+    <section id="games" class="games">
+        <div class="container">
+            <h2>Games</h2>
+            <div class="games-grid">
+                <div class="games-item">
+                    <a href="https://caçaacentos.my.canva.site" target="_blank" rel="noopener noreferrer">
+                        <img src="https://i.imgur.com/maTAOBk.png" alt="Game 1">
+                        <h3>Caça Acentos</h3>
+                    </a>
+                </div>
+                <div class="games-item">
+                    <a href="https://tonygomes.my.canva.site/jogo-da-forca" target="_blank" rel="noopener noreferrer">
+                        <img src="https://i.imgur.com/pJo4k2S.png" alt="Game 2">
+                        <h3>Jogo da Forca</h3>
+                    </a>
+                </div>
+                <div class="games-item">
+                    <img src="https://placehold.co/300x200?text=Game+3" alt="Game 3">
+                    <h3>Game 3</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contato" class="contato">
+        <div class="container">
+            <h2>Contato</h2>
+            <form>
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" name="nome" required>
+
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="mensagem">Mensagem</label>
+                <textarea id="mensagem" name="mensagem" required></textarea>
+
+                <button type="submit" class="btn-primary">Enviar</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 Tony Gomes. Todos os direitos reservados.</p>
+        </div>
+    </footer>
 </body>
 </html>
