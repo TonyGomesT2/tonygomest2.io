@@ -1,0 +1,238 @@
+:root {
+    --cor-primaria: #153051;
+    --cor-destaque: #2377d9;
+    --cor-fundo: #f3f7fb;
+    --cor-branca: #fff;
+    --cor-secundaria: #1d2736;
+    --cor-texto: #202e40;
+    --cor-btn: #153051;
+    --cor-btn-hover: #155a9c;
+    --cor-footer: #12233a;
+
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--cor-fundo);
+    color: var(--cor-texto);
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+header {
+    background: var(--cor-primaria);
+    color: var(--cor-branca);
+    padding: 16px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.7rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+nav ul {
+    display: flex;
+    gap: 38px;
+    list-style: none;
+}
+nav ul li a {
+    color: var(--cor-branca);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: color .2s;
+}
+nav ul li a:hover {
+    color: var(--cor-destaque);
+}
+
+.hero {
+    background: linear-gradient(90deg,var(--cor-destaque) 45%,#9ccaf7 100%);
+    padding: 60px 0;
+}
+.hero-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 36px;
+    justify-content: space-between;
+}
+.hero-text {
+    flex: 1;
+    min-width: 270px;
+}
+.hero h1 {
+    font-size: 2.7rem;
+    color: var(--cor-primaria);
+    margin-bottom: 12px;
+    line-height: 1.1;
+}
+.hero-text p {
+    margin-bottom: 22px;
+    font-size: 1.3rem;
+    color: var(--cor-secundaria);
+}
+.btn-primary {
+    display: inline-block;
+    padding: 12px 32px;
+    background: var(--cor-btn);
+    color: white;
+    border: none;
+    border-radius: 200px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .2s;
+    box-shadow: 0 4px 16px rgba(35,119,217,0.07);
+}
+.btn-primary:hover {
+    background: var(--cor-btn-hover);
+}
+.hero-img {
+    flex: 1;
+    min-width: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hero-img img {
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 8px solid var(--cor-branca);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+    background: var(--cor-branca);
+}
+
+.sobre {
+    padding: 64px 0 32px 0;
+    background: var(--cor-branca);
+}
+.sobre h2 {
+    font-size: 2rem;
+    margin-bottom: 18px;
+    color: var(--cor-primaria);
+}
+.sobre p {
+    font-size: 1.13rem;
+    color: var(--cor-secundaria);
+    max-width: 600px;
+}
+
+.games {
+    padding: 64px 0;
+    background: var(--cor-fundo);
+}
+.games h2 {
+    font-size: 2rem;
+    margin-bottom: 34px;
+    color: var(--cor-primaria);
+    text-align: center;
+}
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    gap: 28px;
+}
+.games-item {
+    background: var(--cor-branca);
+    border-radius: 18px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.09);
+    padding: 14px;
+    text-align: center;
+    transition: transform .16s;
+}
+.games-item:hover {
+    transform: translateY(-7px) scale(1.03);
+}
+.games-item img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+.games-item h3 {
+    font-size: 1.06rem;
+    color: var(--cor-primaria);
+    font-weight: 600;
+}
+
+.contato {
+    padding: 64px 0 48px 0;
+    background: var(--cor-branca);
+}
+.contato h2 {
+    font-size: 2rem;
+    margin-bottom: 22px;
+    color: var(--cor-primaria);
+    text-align: center;
+}
+form {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+form label {
+    font-weight: 500;
+    color: var(--cor-primaria);
+}
+form input, form textarea {
+    padding: 10px 12px;
+    border: 1.5px solid #d7d7d7;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: none;
+}
+form textarea {
+    min-height: 90px;
+}
+form button {
+    margin-top: 10px;
+}
+
+footer {
+    background: var(--cor-footer);
+    color: var(--cor-branca);
+    text-align: center;
+    padding: 20px 0;
+    font-size: .95rem;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+}
+
+/* Responsivo */
+@media (max-width: 800px) {
+    .hero-content {
+        flex-direction: column-reverse;
+        gap: 14px;
+        text-align: center;
+    }
+    .hero-img img {
+        width: 160px;
+        height: 160px;
+    }
+}
