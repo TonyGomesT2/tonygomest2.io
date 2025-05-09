@@ -236,3 +236,31 @@ footer {
         height: 160px;
     }
 }
+/* Efeito de pulso ao acertar */
+.pulso-verde {
+    animation: pulsoVerde 0.5s;
+    background: linear-gradient(87deg, #a5ffce 25%, #43e972 80%) !important;
+    color: #fff !important;
+    border-color: #43e972 !important;
+}
+@keyframes pulsoVerde {
+    0% { transform: scale(1);}
+    50% { transform: scale(1.12);}
+    100% { transform: scale(1);}
+}
+
+/* Efeito de shake ao errar */
+.shake-vermelho {
+    animation: shakeVermelho 0.45s;
+    background: linear-gradient(87deg,#ffd928 25%,#ff3c4c 85%) !important;
+    color: #fff !important;
+    border-color: #ff3c4c !important;
+}
+@keyframes shakeVermelho {
+    0% { transform: translateX(0);}
+    20% { transform: translateX(-10px);}
+    40% { transform: translateX(10px);}
+    60% { transform: translateX(-8px);}
+    80% { transform: translateX(8px);}
+    100% { transform: translateX(0);}
+}
