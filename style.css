@@ -268,3 +268,35 @@ footer {
     80% { transform: translateX(8px);}
     100% { transform: translateX(0);}
 }
+/* Sessão Scratch personalizada */
+.scratch-section {
+    padding: 64px 0;
+    background: linear-gradient(120deg, #238dd9 60%, #155a9c 100%);
+}
+.scratch-section h2 {
+    font-size: 2rem;
+    margin-bottom: 34px;
+    color: #202e40;
+    text-align: center;
+}
+.scratch-section .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    gap: 28px;
+}
+.scratch-section .games-item {
+    background: #2363d9;
+    border: 2px solid #238dd9;
+    border-radius: 18px;
+    box-shadow: 0 4px 14px rgb(40, 198, 255);
+    padding: 14px;
+    text-align: center;
+    transition: transform .16s;
+}
+.scratch-section .games-item:hover {
+    transform: translateY(-7px) scale(1.03);
+    box-shadow: 0 6px 25px rgba(255,184,28,0.2);
+}
+.scratch-section .games-item h3 {
+    color: #ffffff;
+}
