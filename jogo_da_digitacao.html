@@ -166,6 +166,12 @@
             .container { max-width: 96vw; border-radius:16px; padding: 16px 3vw; }
             .exibir-palavra { font-size:2.1rem; padding: 16px 0; }
         }
+        #botao-verificar {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+}
     </style>
 </head>
 <body>
@@ -179,7 +185,7 @@
 
     <div class="container" id="tela-inicial">
         <h1>Jogo da Digitação</h1>
-        
+
         <div class="perfil">
             <label for="nomeJogador">Digite seu nome para começar:</label><br>
             <input type="text" id="nomeJogador" maxlength="30" autocomplete="off"><br>
@@ -209,19 +215,20 @@
 
 <script>
 const bancoPalavras = [
-"maçã","limão","pipa","almoço","amizade","cachorro","bola","circo","força","família",
-"tênis","café","pérola","banco","chuva","livro","abelha","gato","porta","óculos",
-"campeão","quadro","festa","mamão","viola","água","sorvete","páscoa","cidade","lucas",
-"sol","beijo","médio","piscina","flor","mundo","vovó","dentista","feliz",
-"grito","alegria","triste","sorriso","vassoura","pirulito","coruja","tigre","borboleta","leão",
-"batata","coelho","laranja","pato","charada","amigo","torta","lucas","beatriz","pijama",
-"inverno","travesseiro","verdade","flauta","presente","computador","quintal","escola","verde","azulejo",
-"pintinho","carta","tesoura","janela","folha","vento","predio","flauta","monte","turma",
-"carro","nuvem","viagem","cantor","papel","telefone","porta","copo","sabonete","sacola",
-"chave","mochila","cadeira","sapato","foco","navio","jogo","missão","astronauta","caderno",
-// NOVAS PALAVRAS DIFÍCEIS E PROPAROXÍTONAS:
-"proparoxítona","cárdapio","música","álibi","lâmpada","âncora","bônus","tórax","júri","súplica",
-"cômico","trôpego","pêssego","efígie","nítido","âmbar","tênue","vômito","ácido","régua"
+    "maçã", "limão", "pipa", "almoço", "amizade", "cachorro", "bola", "circo", "força", "família",
+    "tênis", "café", "pérola", "banco", "chuva", "livro", "abelha", "gato", "porta", "óculos",
+    "campeão", "quadro", "festa", "mamão", "viola", "água", "sorvete", "Páscoa", "cidade", "Lucas",
+    "sol", "beijo", "médio", "piscina", "flor", "mundo", "vovó", "dentista", "feliz",
+    "grito", "alegria", "triste", "sorriso", "vassoura", "pirulito", "coruja", "tigre", "borboleta", "leão",
+    "batata", "coelho", "laranja", "pato", "charada", "amigo", "torta", "Lucas", "Beatriz", "pijama",
+    "inverno", "travesseiro", "verdade", "flauta", "presente", "computador", "quintal", "escola", "verde", "azulejo",
+    "pintinho", "carta", "tesoura", "janela", "folha", "vento", "prédio", "flauta", "monte", "turma",
+    "carro", "nuvem", "viagem", "cantor", "papel", "telefone", "porta", "copo", "sabonete", "sacola",
+    "chave", "mochila", "cadeira", "sapato", "foco", "navio", "jogo", "missão", "astronauta", "caderno",
+
+    // Palavras difíceis, acentuadas e proparoxítonas:
+    "proparoxítona", "cárdapio", "música", "álibi", "lâmpada", "âncora", "bônus", "tórax", "júri", "súplica",
+    "cômico", "trôpego", "pêssego", "efígie", "nítido", "âmbar", "tênue", "vômito", "ácido", "régua"
 ];
 
 function embaralhar(array) {
@@ -285,19 +292,22 @@ function iniciarJogo() {
         musica.currentTime = 0;
         musica.play();
         musicaAtivada = true;
-    } catch(e) { /* navegadores podem bloquear... */ } 
+    } catch(e) { /* navegadores podem bloquear... */ }
 }
 
 function mostrarPalavra(){
     let indicePalavra = (nivelAtual-1)*palavrasPorNivel + palavraAtual;
     respostaCorreta = palavrasDoJogo[indicePalavra];
-    document.getElementById("painel-palavra").textContent = respostaCorreta.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    document.getElementById("painel-palavra").textContent = respostaCorreta;
     document.getElementById("campo-digitar").value = "";
     document.getElementById("painel-feedback").textContent = "";
     document.getElementById("campo-digitar").focus();
 }
 
 function verificarPalavra(){
+    let botao = document.querySelector("button"); // ou use um ID se quiser
+    botao.classList.add("botao-animado");
+    setTimeout(() => botao.classList.remove("botao-animado"), 200);
     let resposta = document.getElementById("campo-digitar").value.trim();
     const painelPalavra = document.getElementById("painel-palavra");
     painelPalavra.classList.remove("pulso-verde", "shake-vermelho"); // remove caso já esteja
