@@ -3,215 +3,420 @@
 <head>
     <meta charset="UTF-8">
     <title>Jogo da Digitação</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(120deg, #f3f7fb 0%, #fbeeff 100%);
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        font-family: 'Fredoka One', cursive;
+        background: linear-gradient(120deg, #e6f7ff 0%, #ecfff4 50%, #fff9e6 100%);
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        animation: bgChange 20s infinite alternate;
+    }
+
+    @keyframes bgChange {
+        0% { background: linear-gradient(120deg, #e6f7ff 0%, #ecfff4 50%, #fff9e6 100%); }
+        50% { background: linear-gradient(120deg, #ffe6ff 0%, #f4ecff 50%, #e6f9ff 100%); }
+        100% { background: linear-gradient(120deg, #fff9e6 0%, #ffe6f7 50%, #e6fff7 100%); }
+    }
+
+    .container {
+        max-width: 480px;
+        background: linear-gradient(135deg, #fff4e6 0%, #ffe3f0 100%);
+        border-radius: 25px;
+        box-shadow: 0 8px 30px rgba(100, 180, 255, 0.2),
+                    0 2px 10px rgba(200, 220, 255, 0.2),
+                    inset 0 -5px 15px rgba(255,255,255,0.5);
+        margin: 48px auto;
+        padding: 37px 32px;
+        border: 6px dashed #6bb9ff;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .container::before {
+        content: "";
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        background: linear-gradient(45deg,
+            #6bb9ff 0%,
+            #a8d8ff 20%,
+            #c1e1ff 40%,
+            #d6e9ff 60%,
+            #e3f2ff 80%,
+            #f0f7ff 100%);
+        background-size: 400% 400%;
+        z-index: -1;
+        animation: rainbowBorder 8s ease infinite;
+        border-radius: 30px;
+        filter: blur(15px);
+        opacity: 0.5;
+    }
+
+    @keyframes rainbowBorder {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+        color: #4285f4;
+        font-size: 2.8rem;
+        text-align: center;
+        letter-spacing: 2px;
+        text-shadow: 2px 3px 0 #e8f0fe,
+                     0 4px 8px #a8c7ff55,
+                     0 0 10px #ffffff80;
+        margin-bottom: 20px;
+        transform: rotate(-1deg);
+        animation: titleBounce 2s infinite;
+    }
+
+    @keyframes titleBounce {
+        0%, 100% { transform: rotate(-1deg) translateY(0); }
+        50% { transform: rotate(-1deg) translateY(-5px); }
+    }
+
+    h2 {
+        color: #34a853;
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 12px;
+        letter-spacing: 1.2px;
+        text-shadow: 1px 1px 2px #d0e8d6;
+    }
+
+    .btn {
+        display: inline-block;
+        background: linear-gradient(90deg, #4285f4 0%, #34a853 50%, #fbbc05 100%);
+        color: #fff;
+        border: none;
+        border-radius: 30px;
+        font-size: 1.3rem;
+        padding: 14px 40px;
+        margin-top: 24px;
+        cursor: pointer;
+        font-weight: bold;
+        letter-spacing: 1.2px;
+        box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4),
+                    inset 0 2px 0 rgba(255,255,255,0.3);
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn:hover {
+        transform: scale(1.1) rotate(2deg);
+        box-shadow: 0 8px 25px rgba(66, 133, 244, 0.6);
+    }
+
+    .btn::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            to bottom right,
+            rgba(255,255,255,0) 45%,
+            rgba(255,255,255,0.8) 50%,
+            rgba(255,255,255,0) 55%
+        );
+        transform: rotate(30deg);
+        animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+        0% { transform: translateX(-100%) rotate(30deg); }
+        100% { transform: translateX(100%) rotate(30deg); }
+    }
+
+    label {
+        font-weight: bold;
+        color: #4285f4;
+        font-size: 1.2rem;
+        text-shadow: 1px 1px 2px #e8f0fe;
+    }
+
+    input[type="text"] {
+        padding: 14px 20px;
+        font-size: 1.4em;
+        border: 3px solid #c1e1ff;
+        border-radius: 20px;
+        width: 80%;
+        background: #f5f9ff;
+        outline-color: #4285f4;
+        margin-top: 12px;
+        font-weight: 500;
+        box-shadow: inset 0 2px 5px rgba(180, 210, 255, 0.3),
+                    0 3px 10px rgba(180, 210, 255, 0.2);
+        transition: all 0.3s;
+    }
+
+    input[type="text"]:focus {
+        border-color: #4285f4;
+        box-shadow: inset 0 2px 8px rgba(180, 210, 255, 0.4),
+                    0 4px 15px rgba(180, 210, 255, 0.3),
+                    0 0 0 3px rgba(66, 133, 244, 0.2);
+    }
+
+    .exibir-palavra {
+        font-size: 3.5rem;
+        font-weight: bold;
+        background: linear-gradient(87deg, #e8f0fe 25%, #d6e9ff 80%);
+        color: #4285f4;
+        border-radius: 30px;
+        box-shadow: 0 10px 30px #a8c7ff55,
+                    inset 0 -5px 15px rgba(255,255,255,0.5);
+        letter-spacing: 4px;
+        padding: 30px 0;
+        margin: 34px 0 16px;
+        text-align: center;
+        border: 4px dotted #6bb9ff;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .exibir-palavra::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="10" y="20" font-family="Arial" font-size="12" fill="rgba(66,133,244,0.1)">⌨️</text><text x="30" y="50" font-family="Arial" font-size="15" fill="rgba(66,133,244,0.1)">🖱️</text><text x="70" y="30" font-family="Arial" font-size="10" fill="rgba(66,133,244,0.2)">💻</text><text x="50" y="80" font-family="Arial" font-size="14" fill="rgba(66,133,244,0.1)">🖥️</text></svg>');
+        opacity: 0.3;
+        pointer-events: none;
+    }
+
+    .nivel {
+        font-size: 1.3rem;
+        color: #4285f4;
+        text-shadow: 1px 2px 5px #a8c7ffaa;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 15px;
+        padding: 8px 15px;
+        background: rgba(255,255,255,0.5);
+        border-radius: 20px;
+        display: inline-block;
+        box-shadow: 0 3px 10px rgba(180, 210, 255, 0.2);
+    }
+
+    .painel-info {
+        margin-top: 20px;
+        font-size: 1.4rem;
+        text-align: center;
+        padding: 10px;
+        border-radius: 15px;
+    }
+
+    .painel-info.acertos {
+        color: #34a853;
+        font-weight: bold;
+        animation: pulse 0.6s ease, confetti 1s ease;
+        background: rgba(52, 168, 83, 0.1);
+    }
+
+    .painel-info.erro {
+        color: #ea4335;
+        font-weight: bold;
+        animation: shake 0.4s ease;
+        background: rgba(234, 67, 53, 0.1);
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-4px); }
+        75% { transform: translateX(4px); }
+    }
+
+    @keyframes confetti {
+        0% { background-position: 0% 50%, 0% 50%; }
+        20% { background-image: radial-gradient(circle at 10% 20%, #4285f4 0%, transparent 5%),
+                              radial-gradient(circle at 90% 30%, #34a853 0%, transparent 5%); }
+        40% { background-image: radial-gradient(circle at 30% 60%, #fbbc05 0%, transparent 5%),
+                              radial-gradient(circle at 70% 70%, #ea4335 0%, transparent 5%); }
+        60% { background-image: radial-gradient(circle at 50% 30%, #34a853 0%, transparent 5%),
+                              radial-gradient(circle at 20% 80%, #4285f4 0%, transparent 5%); }
+        100% { background-image: none; }
+    }
+
+    .final {
+        font-size: 1.6rem;
+        margin-top: 30px;
+        color: #4285f4;
+        text-align: center;
+        font-weight: bold;
+        text-shadow: 0 3px 7px #d6e9ff;
+        padding: 20px;
+        background: rgba(255,255,255,0.7);
+        border-radius: 20px;
+        box-shadow: 0 5px 15px rgba(180, 210, 255, 0.3);
+    }
+
+    #nome-final {
+        color: #4285f4;
+        font-size: 2rem;
+        display: inline-block;
+        animation: rainbowText 3s infinite;
+    }
+
+    @keyframes rainbowText {
+        0% { color: #4285f4; }
+        20% { color: #34a853; }
+        40% { color: #fbbc05; }
+        60% { color: #ea4335; }
+        80% { color: #673ab7; }
+        100% { color: #4285f4; }
+    }
+
+    #campo-digitar {
+        display: block;
+        margin: 15px auto 10px auto;
+    }
+
+    #botao-verificar {
+        display: block;
+        margin: 15px auto;
+        background: linear-gradient(90deg, #4285f4, #34a853, #fbbc05);
+        padding: 12px 32px;
+    }
+
+    .musica-btn {
+        background: linear-gradient(90deg, #4285f4 0%, #34a853 100%);
+        color: #fff;
+        font-weight: bold;
+        font-size: 1.1rem;
+        padding: 8px 22px;
+        border-radius: 20px;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3),
+                   inset 0 2px 0 rgba(255,255,255,0.3);
+        margin-top: 12px;
+        transition: all 0.3s;
+    }
+
+    .musica-btn:hover {
+        transform: scale(1.05) rotate(2deg);
+        box-shadow: 0 6px 15px rgba(66, 133, 244, 0.4);
+    }
+
+    .tech-emoji {
+        font-size: 1.5em;
+        vertical-align: middle;
+        margin: 0 5px;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .tech-items {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .tech-item {
+        position: absolute;
+        font-size: 20px;
+        opacity: 0;
+        animation: falling 5s linear infinite;
+    }
+
+    @keyframes falling {
+        0% {
+            transform: translateY(-10vh) rotate(0deg);
+            opacity: 0;
         }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% {
+            transform: translateY(110vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+
+    @media(max-width: 650px) {
         .container {
-            max-width: 480px;
-            background: linear-gradient(135deg, #fffbe7 0%, #e8f8ff 100%);
-            border-radius: 22px;
-            box-shadow: 0 8px 44px rgba(64,87,126,0.13), 0 2px 10px #ffd4fa33;
-            margin: 48px auto;
-            padding: 37px 32px 32px 32px;
-            border: 5px solid #ffd9f0;
-        }
-        h1 {
-            color: #2377d9;
-            font-size: 2.3rem;
-            text-align: center;
-            letter-spacing: 2px;
-            text-shadow: 2px 3px 0 #ffd928, 0 4px 10px #29d9ce24;
-            margin-bottom: 18px;
-        }
-        h2 {
-            color: #ea269d;
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 10px;
-            letter-spacing: 1.1px;
-            text-shadow: 1px 2px 8px #ffd9282f;
-        }
-        .btn {
-            display: inline-block;
-            background: linear-gradient(90deg, #2377d9 50%, #ea269d 100%);
-            color: #fff;
-            border: none;
-            border-radius: 20px;
-            font-size: 1.13rem;
-            padding: 12px 38px;
-            margin-top: 22px;
-            cursor: pointer;
-            font-weight: 700;
-            letter-spacing: 1.2px;
-            box-shadow: 0 3px 15px #ea269d22, 0 0px 0px #fccd3c33;
-            transition: background .2s, transform .18s;
-        }
-        .btn:hover {
-            background: linear-gradient(90deg, #ffd928 50%, #1dbebf 100%);
-            color: #2377d9;
-            transform: scale(1.05);
-        }
-        .perfil {
-            margin-bottom: 28px;
-            text-align: center;
-        }
-        label {
-            font-weight: 600;
-            color: #ea269d;
-            font-size: 1.1rem;
-        }
-        input[type="text"] {
-            padding: 11px 16px;
-            font-size: 1.25em;
-            border: 2px solid #2377d9;
-            border-radius: 14px;
-            margin-top: 8px;
-            width: 80%;
-            background: #fffaf7;
-            outline-color: #ea269d;
-            font-weight: 500;
-            box-shadow: 0 2px 8px #b3f5ea22;
-        }
-        .musica-container {
-            text-align: center;
-            margin-bottom: 18px;
-            margin-top: 4px;
-        }
-        .musica-btn {
-            background: linear-gradient(90deg,#ffd928 60%,#ea269d 100%);
-            color: #fff;
-            border: none;
-            font-size: 1.02em;
-            padding: 6px 18px;
-            border-radius: 12px;
-            margin-top: 3px;
-            margin-bottom: 6px;
-            cursor: pointer;
-            letter-spacing: 1px;
-            font-weight: 600;
-            box-shadow:0 2px 7px #ea269d23;
-            transition: background .18s;
-        }
-        .musica-btn:hover {
-            background: linear-gradient(90deg,#2377d9 60%, #28c6ff 100%);
-            color: #ea269d;
+            max-width: 96vw;
+            padding: 16px 3vw;
+            margin: 24px auto;
         }
         .exibir-palavra {
-            font-size: 3.3rem;
-            font-weight: bold;
-            background: linear-gradient(87deg, #28c6ff 25%,#2377d9 80%);
-            color: #ea269d;
-            border-radius: 26px;
-            box-shadow: 0 8px 25px #ffd92833, 0 2px 18px #2377d933, 0 0 0 #fff;
-            letter-spacing: 3px;
-            padding: 28px 0 24px 0;
-            margin: 34px 0 13px 0;
-            text-align: center;
-            text-shadow:
-                2px 3px 0 #fff,
-                0 3px 15px #ea269d25,
-                2px 10px 12px #ffd92855;
-            border: 4px solid #ea269d44;
+            font-size: 2.5rem;
+            padding: 20px 0;
         }
-        .nivel {
-            font-size: 1.16rem;
-            color: #2377d9;
-            margin-bottom: 6px;
-            text-shadow: 1px 2px 6px #ffd92822;
-            font-weight: bold;
+        h1 {
+            font-size: 2.2rem;
         }
-        .painel-info {
-            margin-top: 16px;
-            font-size: 1.14rem;
-            text-align: center;
-        }
-        .painel-info.acertos { color: #09bb40; font-weight: bold; }
-        .painel-info.erro { color: #ea269d; font-weight: bold; }
-        #campo-digitar {
-            display: block;
-            margin: 0 auto;
-            margin-bottom: 8px;
-            margin-top: 12px;
-            background: #fbeeff;
-        }
-        .painel-info#painel-acertos {
-            margin-top: 10px;
-            color: #2377d9;
-            font-size: 1rem;
-        }
-        .final {
-            font-size: 1.34rem;
-            margin-top: 28px;
-            color: #2377d9;
-            text-align: center;
-            font-weight: bold;
-            text-shadow: 0 4px 8px #ffd92833;
-        }
-        #nome-final { color: #ea269d; }
-        #confetti-canvas {
-            position: fixed; 
-            left:0; top:0; 
-            width: 100vw; 
-            height: 100vh; 
-            pointer-events: none; 
-            z-index: 999;
-            display:none;
-        }
-        @media(max-width: 650px) {
-            .container { max-width: 96vw; border-radius:16px; padding: 16px 3vw; }
-            .exibir-palavra { font-size:2.1rem; padding: 16px 0; }
-        }
-        #botao-verificar {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10px;
-}
-    </style>
+    }
+
+    .perfil .btn {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 24px;
+    }
+</style>
+
 </head>
 <body>
 <canvas id="confetti-canvas"></canvas>
+<div class="tech-items" id="tech-items"></div>
 
 <!-- MÚSICA DE FUNDO: troque o src pelo seu arquivo MP3 -->
 <audio id="musicaFundo" loop preload="auto">
     <source src="musica.mp3" type="audio/mpeg">
-    <!-- <source src="musica.ogg" type="audio/ogg">  (opcional: ogg para outros navegadores) -->
 </audio>
 
-    <div class="container" id="tela-inicial">
-        <h1>Jogo da Digitação</h1>
+<div class="container" id="tela-inicial">
+    <h1>Jogo da Digitação</h1>
 
-        <div class="perfil">
-            <label for="nomeJogador">Digite seu nome para começar:</label><br>
-            <input type="text" id="nomeJogador" maxlength="30" autocomplete="off"><br>
-            <button class="btn" onclick="iniciarJogo()">Começar</button>
-        </div>
+    <div class="perfil">
+        <label for="nomeJogador">Digite seu nome para começar:</label><br>
+        <input type="text" id="nomeJogador" maxlength="30" autocomplete="off"><br>
+        <button class="btn" onclick="iniciarJogo()">Começar ⌨️</button>
     </div>
+</div>
 
-    <div class="container" id="tela-jogo" style="display:none;">
-        <div class="nivel" id="painel-nivel"></div>
-        <div id="painel-palavra" class="exibir-palavra"></div>
-        <input type="text" id="campo-digitar" placeholder="Digite aqui" autocomplete="off" autofocus>
-        <button class="btn" id="botao-verificar">Verificar</button>
-        <div class="painel-info" id="painel-feedback"></div>
-        <div class="painel-info" id="painel-acertos"></div>
-    </div>
+<div class="container" id="tela-jogo" style="display:none;">
+    <div class="nivel" id="painel-nivel"></div>
+    <div id="painel-palavra" class="exibir-palavra"></div>
+    <input type="text" id="campo-digitar" placeholder="Digite aqui" autocomplete="off" autofocus>
+    <button class="btn" id="botao-verificar">Verificar 💻</button>
+    <div class="painel-info" id="painel-feedback"></div>
+    <div class="painel-info" id="painel-acertos"></div>
+</div>
 
-    <div class="container" id="tela-final" style="display:none;">
-        <h2>Parabéns, <span id="nome-final"></span>!</h2>
-        <div class="final">
-            Você concluiu todos os níveis do<br>Jogo da Digitação!<br><br>
-            Seu desempenho: <span id="pontuacao-final"></span> acertos de 50 palavras.<br><br>
-            Treine mais vezes para ficar ainda melhor!<br>
-            <span style="font-size:2em;display:block;margin-top:10px;">🎉</span>
-        </div>
-        <button class="btn" onclick="location.reload()">Jogar Novamente</button>
+<div class="container" id="tela-final" style="display:none;">
+    <h2>Parabéns, <span id="nome-final"></span>!</h2>
+    <div class="final">
+        Você concluiu todos os níveis do<br>Jogo da Digitação!<br><br>
+        Seu desempenho: <span id="pontuacao-final"></span> acertos de 50 palavras.<br><br>
+        Treine mais vezes para ficar ainda melhor!<br>
+        <span style="font-size:2em;display:block;margin-top:10px;">🎮</span>
     </div>
+    <button class="btn" onclick="location.reload()">Jogar Novamente 🕹️</button>
+</div>
 
 <script>
 const bancoPalavras = [
@@ -293,6 +498,9 @@ function iniciarJogo() {
         musica.play();
         musicaAtivada = true;
     } catch(e) { /* navegadores podem bloquear... */ }
+
+    // Inicia os elementos de tech flutuantes
+    criarTechItems();
 }
 
 function mostrarPalavra(){
@@ -316,15 +524,15 @@ function verificarPalavra(){
         document.getElementById("painel-feedback").className = "painel-info erro";
         return;
     }
-    let esperado = respostaCorreta.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-    let respostaComp = resposta.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+let esperado = respostaCorreta.toLowerCase();
+let respostaComp = resposta.toLowerCase();
     if(respostaComp === esperado){
         document.getElementById("painel-feedback").textContent = "Muito bem!";
         document.getElementById("painel-feedback").className = "painel-info acertos";
         acertos++;
         painelPalavra.classList.add("pulso-verde");
     }else{
-        document.getElementById("painel-feedback").textContent = `Resposta correta: ${respostaCorreta}`;
+        document.getElementById("painel-feedback").textContent = `Errado! A resposta correta é: ${respostaCorreta}`;
         document.getElementById("painel-feedback").className = "painel-info erro";
         painelPalavra.classList.add("shake-vermelho");
     }
@@ -385,7 +593,7 @@ function confettiShow() {
             y: Math.random()*c.height*0.7-80,
             r: 7+Math.random()*12,
             d: 8+Math.random()*9,
-            color: ["#2377d9","#ea269d","#ffd928","#1dbebf","#fd8c25","#fffbe7"][Math.floor(Math.random()*6)],
+            color: ["#4285f4","#34a853","#fbbc05","#ea4335","#673ab7","#8bc34a"][Math.floor(Math.random()*6)],
             tilt: Math.random()*8-4
         });
     }
@@ -417,6 +625,24 @@ function confettiShow() {
     draw();
 }
 
+// Cria elementos de computação flutuantes
+function criarTechItems() {
+    const techEmojis = ['💻', '⌨️', '🖱️', '🖥️', '📱', '💾', '📀', '🖨️', '🖲️', '📊', '🔌', '💽', '📟'];
+    const techItemsContainer = document.getElementById('tech-items');
+
+    for (let i = 0; i < 15; i++) {
+        const techItem = document.createElement('div');
+        techItem.className = 'tech-item';
+        techItem.innerHTML = techEmojis[Math.floor(Math.random() * techEmojis.length)];
+        techItem.style.left = Math.random() * 100 + 'vw';
+        techItem.style.animationDuration = 5 + Math.random() * 10 + 's';
+        techItem.style.animationDelay = Math.random() * 8 + 's';
+        techItem.style.fontSize = (15 + Math.random() * 25) + 'px';
+        techItem.style.color = ['#4285f4', '#34a853', '#fbbc05', '#ea4335', '#673ab7'][Math.floor(Math.random() * 5)];
+        techItemsContainer.appendChild(techItem);
+    }
+}
+
 // Opcional: pausar música ao sair da aba
 window.addEventListener("beforeunload", function() {
     if(musica && !musica.paused) {
@@ -424,6 +650,17 @@ window.addEventListener("beforeunload", function() {
         musica.currentTime = 0;
     }
 });
+
+// Adiciona emojis de tech aos botões quando a página carrega
+window.onload = function() {
+    const techEmojis = ['💻', '⌨️', '🖱️', '🖥️', '📱', '💾'];
+    const botoes = document.querySelectorAll('.btn');
+
+    botoes.forEach((botao, index) => {
+        const emoji = techEmojis[index % techEmojis.length];
+        botao.innerHTML += ' ' + emoji;
+    });
+};
 </script>
 </body>
 </html>
