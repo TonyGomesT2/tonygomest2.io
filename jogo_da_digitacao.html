@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Jogo da Digitação</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(120deg, #f3f7fb 0%, #fbeeff 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 480px;
+            background: linear-gradient(135deg, #fffbe7 0%, #e8f8ff 100%);
+            border-radius: 22px;
+            box-shadow: 0 8px 44px rgba(64,87,126,0.13), 0 2px 10px #ffd4fa33;
+            margin: 48px auto;
+            padding: 37px 32px 32px 32px;
+            border: 5px solid #ffd9f0;
+        }
+        h1 {
+            color: #2377d9;
+            font-size: 2.3rem;
+            text-align: center;
+            letter-spacing: 2px;
+            text-shadow: 2px 3px 0 #ffd928, 0 4px 10px #29d9ce24;
+            margin-bottom: 18px;
+        }
+        h2 {
+            color: #ea269d;
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            letter-spacing: 1.1px;
+            text-shadow: 1px 2px 8px #ffd9282f;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #2377d9 50%, #ea269d 100%);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.13rem;
+            padding: 12px 38px;
+            margin-top: 22px;
+            cursor: pointer;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            box-shadow: 0 3px 15px #ea269d22, 0 0px 0px #fccd3c33;
+            transition: background .2s, transform .18s;
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #ffd928 50%, #1dbebf 100%);
+            color: #2377d9;
+            transform: scale(1.05);
+        }
+        .perfil {
+            margin-bottom: 28px;
+            text-align: center;
+        }
+        label {
+            font-weight: 600;
+            color: #ea269d;
+            font-size: 1.1rem;
+        }
+        input[type="text"] {
+            padding: 11px 16px;
+            font-size: 1.25em;
+            border: 2px solid #2377d9;
+            border-radius: 14px;
+            margin-top: 8px;
+            width: 80%;
+            background: #fffaf7;
+            outline-color: #ea269d;
+            font-weight: 500;
+            box-shadow: 0 2px 8px #b3f5ea22;
+        }
+        .musica-container {
+            text-align: center;
+            margin-bottom: 18px;
+            margin-top: 4px;
+        }
+        .musica-btn {
+            background: linear-gradient(90deg,#ffd928 60%,#ea269d 100%);
+            color: #fff;
+            border: none;
+            font-size: 1.02em;
+            padding: 6px 18px;
+            border-radius: 12px;
+            margin-top: 3px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            font-weight: 600;
+            box-shadow:0 2px 7px #ea269d23;
+            transition: background .18s;
+        }
+        .musica-btn:hover {
+            background: linear-gradient(90deg,#2377d9 60%, #28c6ff 100%);
+            color: #ea269d;
+        }
+        .exibir-palavra {
+            font-size: 3.3rem;
+            font-weight: bold;
+            background: linear-gradient(87deg, #28c6ff 25%,#2377d9 80%);
+            color: #ea269d;
+            border-radius: 26px;
+            box-shadow: 0 8px 25px #ffd92833, 0 2px 18px #2377d933, 0 0 0 #fff;
+            letter-spacing: 3px;
+            padding: 28px 0 24px 0;
+            margin: 34px 0 13px 0;
+            text-align: center;
+            text-shadow:
+                2px 3px 0 #fff,
+                0 3px 15px #ea269d25,
+                2px 10px 12px #ffd92855;
+            border: 4px solid #ea269d44;
+        }
+        .nivel {
+            font-size: 1.16rem;
+            color: #2377d9;
+            margin-bottom: 6px;
+            text-shadow: 1px 2px 6px #ffd92822;
+            font-weight: bold;
+        }
+        .painel-info {
+            margin-top: 16px;
+            font-size: 1.14rem;
+            text-align: center;
+        }
+        .painel-info.acertos { color: #09bb40; font-weight: bold; }
+        .painel-info.erro { color: #ea269d; font-weight: bold; }
+        #campo-digitar {
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 8px;
+            margin-top: 12px;
+            background: #fbeeff;
+        }
+        .painel-info#painel-acertos {
+            margin-top: 10px;
+            color: #2377d9;
+            font-size: 1rem;
+        }
+        .final {
+            font-size: 1.34rem;
+            margin-top: 28px;
+            color: #2377d9;
+            text-align: center;
+            font-weight: bold;
+            text-shadow: 0 4px 8px #ffd92833;
+        }
+        #nome-final { color: #ea269d; }
+        #confetti-canvas {
+            position: fixed; 
+            left:0; top:0; 
+            width: 100vw; 
+            height: 100vh; 
+            pointer-events: none; 
+            z-index: 999;
+            display:none;
+        }
+        @media(max-width: 650px) {
+            .container { max-width: 96vw; border-radius:16px; padding: 16px 3vw; }
+            .exibir-palavra { font-size:2.1rem; padding: 16px 0; }
+        }
+    </style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<!-- MÚSICA DE FUNDO: troque o src pelo seu arquivo MP3 -->
+<audio id="musicaFundo" loop preload="auto">
+    <source src="musica.mp3" type="audio/mpeg">
+    <!-- <source src="musica.ogg" type="audio/ogg">  (opcional: ogg para outros navegadores) -->
+</audio>
+
+    <div class="container" id="tela-inicial">
+        <h1>Jogo da Digitação</h1>
+        
+        <div class="perfil">
+            <label for="nomeJogador">Digite seu nome para começar:</label><br>
+            <input type="text" id="nomeJogador" maxlength="30" autocomplete="off"><br>
+            <button class="btn" onclick="iniciarJogo()">Começar</button>
+        </div>
+    </div>
+
+    <div class="container" id="tela-jogo" style="display:none;">
+        <div class="nivel" id="painel-nivel"></div>
+        <div id="painel-palavra" class="exibir-palavra"></div>
+        <input type="text" id="campo-digitar" placeholder="Digite aqui" autocomplete="off" autofocus>
+        <button class="btn" id="botao-verificar">Verificar</button>
+        <div class="painel-info" id="painel-feedback"></div>
+        <div class="painel-info" id="painel-acertos"></div>
+    </div>
+
+    <div class="container" id="tela-final" style="display:none;">
+        <h2>Parabéns, <span id="nome-final"></span>!</h2>
+        <div class="final">
+            Você concluiu todos os níveis do<br>Jogo da Digitação!<br><br>
+            Seu desempenho: <span id="pontuacao-final"></span> acertos de 50 palavras.<br><br>
+            Treine mais vezes para ficar ainda melhor!<br>
+            <span style="font-size:2em;display:block;margin-top:10px;">🎉</span>
+        </div>
+        <button class="btn" onclick="location.reload()">Jogar Novamente</button>
+    </div>
+
+<script>
+const bancoPalavras = [
+"maçã","limão","pipa","almoço","amizade","cachorro","bola","circo","força","família",
+"tênis","café","pérola","banco","chuva","livro","abelha","gato","porta","óculos",
+"campeão","quadro","festa","mamão","viola","água","sorvete","páscoa","cidade","lucas",
+"sol","beijo","médio","piscina","flor","mundo","vovó","dentista","feliz",
+"grito","alegria","triste","sorriso","vassoura","pirulito","coruja","tigre","borboleta","leão",
+"batata","coelho","laranja","pato","charada","amigo","torta","lucas","beatriz","pijama",
+"inverno","travesseiro","verdade","flauta","presente","computador","quintal","escola","verde","azulejo",
+"pintinho","carta","tesoura","janela","folha","vento","predio","flauta","monte","turma",
+"carro","nuvem","viagem","cantor","papel","telefone","porta","copo","sabonete","sacola",
+"chave","mochila","cadeira","sapato","foco","navio","jogo","missão","astronauta","caderno",
+// NOVAS PALAVRAS DIFÍCEIS E PROPAROXÍTONAS:
+"proparoxítona","cárdapio","música","álibi","lâmpada","âncora","bônus","tórax","júri","súplica",
+"cômico","trôpego","pêssego","efígie","nítido","âmbar","tênue","vômito","ácido","régua"
+];
+
+function embaralhar(array) {
+  let copia = array.slice();
+  for (let i = copia.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+  return copia;
+}
+
+let palavrasDoJogo = [];
+let nomeJogador = "";
+let acertos = 0;
+let nivelAtual = 1;
+let palavraAtual = 0;
+let respostaCorreta = "";
+const palavrasPorNivel = 5;
+const totalNiveis = 10;
+
+// Áudio
+let musicaAtivada = false;
+const musica = document.getElementById('musicaFundo');
+
+function ativarMusica() {
+    try {
+        musica.currentTime = 0;
+        musica.play();
+        musicaAtivada = true;
+        document.getElementById('musica-status').textContent = " Música ativada!";
+        document.getElementById('btn-musica').disabled = true;
+        document.getElementById('btn-musica').style.opacity = 0.66;
+    } catch (e) {
+        alert("Ocorreu um problema ao tentar tocar a música.");
+    }
+}
+
+// Opcional: reativa ao voltar para aba (caso precise garantir continuidade)
+document.addEventListener("visibilitychange", function() {
+    if (!document.hidden && musicaAtivada && document.getElementById("tela-jogo").style.display === "block") {
+        musica.play();
+    }
+});
+
+function iniciarJogo() {
+    nomeJogador = document.getElementById("nomeJogador").value.trim();
+    if(nomeJogador.length < 2){
+        alert("Por favor, digite seu nome completo.");
+        return;
+    }
+    document.getElementById("tela-inicial").style.display = "none";
+    document.getElementById("tela-jogo").style.display = "block";
+    palavrasDoJogo = embaralhar(bancoPalavras).slice(0, palavrasPorNivel * totalNiveis);
+    acertos = 0;
+    nivelAtual = 1;
+    palavraAtual = 0;
+    mostrarPalavra();
+    atualizarPainel();
+    // Agora a música sempre começa aqui ao iniciar o jogo
+    try {
+        musica.currentTime = 0;
+        musica.play();
+        musicaAtivada = true;
+    } catch(e) { /* navegadores podem bloquear... */ } 
+}
+
+function mostrarPalavra(){
+    let indicePalavra = (nivelAtual-1)*palavrasPorNivel + palavraAtual;
+    respostaCorreta = palavrasDoJogo[indicePalavra];
+    document.getElementById("painel-palavra").textContent = respostaCorreta.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    document.getElementById("campo-digitar").value = "";
+    document.getElementById("painel-feedback").textContent = "";
+    document.getElementById("campo-digitar").focus();
+}
+
+function verificarPalavra(){
+    let resposta = document.getElementById("campo-digitar").value.trim();
+    const painelPalavra = document.getElementById("painel-palavra");
+    painelPalavra.classList.remove("pulso-verde", "shake-vermelho"); // remove caso já esteja
+    if(resposta.length === 0){
+        document.getElementById("painel-feedback").textContent = "Digite a palavra!";
+        document.getElementById("painel-feedback").className = "painel-info erro";
+        return;
+    }
+    let esperado = respostaCorreta.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    let respostaComp = resposta.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    if(respostaComp === esperado){
+        document.getElementById("painel-feedback").textContent = "Muito bem!";
+        document.getElementById("painel-feedback").className = "painel-info acertos";
+        acertos++;
+        painelPalavra.classList.add("pulso-verde");
+    }else{
+        document.getElementById("painel-feedback").textContent = `Resposta correta: ${respostaCorreta}`;
+        document.getElementById("painel-feedback").className = "painel-info erro";
+        painelPalavra.classList.add("shake-vermelho");
+    }
+    setTimeout(() => {
+        painelPalavra.classList.remove("pulso-verde","shake-vermelho");
+        proximaPalavra();
+    }, 1100);
+}
+
+function proximaPalavra(){
+    palavraAtual++;
+    if(palavraAtual === palavrasPorNivel){
+        palavraAtual = 0;
+        nivelAtual++;
+        if(nivelAtual > totalNiveis){
+            return finalizarJogo();
+        }
+    }
+    atualizarPainel();
+    mostrarPalavra();
+}
+
+function atualizarPainel(){
+    document.getElementById("painel-nivel").textContent = `Nível: ${nivelAtual} de ${totalNiveis} — Palavra: ${palavraAtual+1} de ${palavrasPorNivel}`;
+    document.getElementById("painel-acertos").textContent = `Acertos: ${acertos} de ${(nivelAtual-1)*palavrasPorNivel + palavraAtual}`;
+}
+
+document.getElementById("botao-verificar").onclick = verificarPalavra;
+document.getElementById("campo-digitar").addEventListener("keyup", function(e){
+    if(e.key === "Enter"){
+        verificarPalavra();
+    }
+});
+
+function finalizarJogo(){
+    document.getElementById("tela-jogo").style.display = "none";
+    document.getElementById("tela-final").style.display = "block";
+    document.getElementById("nome-final").textContent = nomeJogador;
+    document.getElementById("pontuacao-final").textContent = acertos;
+    confettiShow();
+    if(musicaAtivada) {
+        musica.pause();
+        musica.currentTime = 0;
+        document.getElementById('musica-status').textContent = "";
+    }
+}
+
+// Simples confete colorido (canvas) quando finaliza
+function confettiShow() {
+    var c = document.getElementById("confetti-canvas");
+    var ctx = c.getContext("2d");
+    c.width = window.innerWidth; c.height = window.innerHeight;
+    c.style.display = "block";
+    let confs = [];
+    for(let i=0; i<140; i++){
+        confs.push({
+            x: Math.random()*c.width,
+            y: Math.random()*c.height*0.7-80,
+            r: 7+Math.random()*12,
+            d: 8+Math.random()*9,
+            color: ["#2377d9","#ea269d","#ffd928","#1dbebf","#fd8c25","#fffbe7"][Math.floor(Math.random()*6)],
+            tilt: Math.random()*8-4
+        });
+    }
+    let angle = 0;
+    let timer = 0;
+    function draw(){
+        ctx.clearRect(0,0,c.width,c.height);
+        for(let i=0;i<confs.length;i++){
+            let cf=confs[i];
+            ctx.beginPath();
+            ctx.arc(cf.x,cf.y,cf.r,0,2*Math.PI);
+            ctx.fillStyle=cf.color;
+            ctx.globalAlpha=0.71;
+            ctx.fill();
+        }
+        angle += 0.02;
+        for(let i=0;i<confs.length;i++){
+            let cf=confs[i];
+            cf.y += (Math.cos(angle+cf.d)+1+cf.r/7)*1.5;
+            cf.x += Math.sin(angle)*2.3;
+            if(cf.y>c.height) cf.y = -20;
+            if(cf.x<0) cf.x = c.width+10;
+            if(cf.x>c.width) cf.x = -10;
+        }
+        timer++;
+        if(timer<220) requestAnimationFrame(draw);
+        else c.style.display = "none";
+    }
+    draw();
+}
+
+// Opcional: pausar música ao sair da aba
+window.addEventListener("beforeunload", function() {
+    if(musica && !musica.paused) {
+        musica.pause();
+        musica.currentTime = 0;
+    }
+});
+</script>
+</body>
+</html>
