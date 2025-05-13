@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Forca Divertido</title>
+    <style>
+        /* Estilo Geral */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ff6b6b;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Tela de Nome */
+        .tela-inicial {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            min-height: 100vh;
+        }
+
+        .tela-inicial input {
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #4d96ff;
+            font-size: 1.2rem;
+            margin: 0.5rem;
+        }
+
+        .tela-inicial button {
+            padding: 10px 20px;
+            background-color: #06d6a0;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tela-inicial button:hover {
+            background-color: #04b981;
+        }
+
+        /* Cabeçalho do Jogo */
+        .game-header {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: #444;
+        }
+
+        .game-header span {
+            padding: 10px 20px;
+            border-radius: 25px;
+            background: #f8f9fa;
+        }
+
+        .word-display {
+            font-size: 2rem;
+            letter-spacing: 10px;
+            color: #4d96ff;
+        }
+
+        .keyboard {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .key {
+            padding: 15px;
+            background-color: #ffd166;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .key:hover {
+            transform: scale(1.1);
+            background-color: #ffbb33;
+        }
+
+        .controls button {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .controls button:hover {
+            background-color: #e63946;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 1.5rem;
+        }
+
+        .win {
+            color: green;
+            font-weight: bold;
+            font-size: 2rem;
+        }
+
+        .lose {
+            color: red;
+            font-weight: bold;
+            font-size: 2rem;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Tela Inicial -->
+    <div class="tela-inicial">
+        <h2>Olá! Pronto para jogar?</h2>
+        <p>Digite o seu nome:</p>
+        <input type="text" id="nomeJogador" placeholder="Seu nome..." />
+        <button onclick="iniciarJogo()">Começar</button>
+    </div>
+
+    <!-- Tela do Jogo -->
+    <div class="container" style="display: none;">
+        <h1>Jogo da Forca</h1>
+        <div class="game-header">
+            <span>Pontuação: <span id="pontuacao">0</span></span>
+            <span>Tentativas: <span id="tentativas">6</span></span>
+            <span>Palavras acertadas: <span id="palavrasAcertadas">0</span></span>
+        </div>
+        <div id="dica" style="font-size:1.1rem; margin-bottom:16px; color:#666;"></div>
+        <div class="word-display" id="palavra-secreta"></div>
+        <div class="hangman-area">
+            <svg id="forca-svg" width="120" height="180"></svg>
+        </div>
+        <div class="keyboard" id="teclado"></div>
+        <div class="controls">
+            <button onclick="reiniciarJogo()">Novo Jogo</button>
+        </div>
+    </div>
+
+    <audio id="musicaFundo" src="https://www.midis101.com/play-midi/40592-bella-ciao-l-ant.mp3" loop></audio>
+    <script>
+    let nomeJogador = "";
+    let tentativas = 6;
+    let pontuacao = 0;
+    let palavrasAcertadas = 0;
+    const palavras = [
+        { palavra: "UNICORNIO", dica: "Animal místico" },
+        { palavra: "AVENTURA", dica: "Categoria de filme emocionante" },
+        { palavra: "DINOSSAURO", dica: "Animal pré-histórico" },
+        { palavra: "PIXAR", dica: "Estúdio de animação famoso" },
+        { palavra: "COMPUTADOR", dica: "Equipamento eletrônico de processamento" },
+        { palavra: "ALGORITMO", dica: "Sequência de passos para resolver um problema" },
+        { palavra: "JAVASCRIPT", dica: "Linguagem popular para web" },
+        { palavra: "PYTHON", dica: "Linguagem de programação de fácil leitura" },
+        { palavra: "OCEANO", dica: "Corpo de água grande e salgado" },
+        { palavra: "DESERTO", dica: "Região árida" },
+        { palavra: "GIRAFA", dica: "Animal de pescoço longo" },
+        { palavra: "CACHOEIRA", dica: "Queda natural de água" },
+        { palavra: "CARAMELO", dica: "Doce feito de açúcar derretido" },
+        { palavra: "ORQUESTRA", dica: "Grupo grande de músicos clássicos" },
+        { palavra: "MICROFONE", dica: "Usado para amplificar a voz" },
+        { palavra: "BICICLETA", dica: "Meio de transporte com duas rodas" },
+        { palavra: "ECLIPSE", dica: "Ocultação de um astro por outro" },
+        { palavra: "MARATONA", dica: "Corrida de longa distância" },
+        { palavra: "MONTANHA", dica: "Grande elevação natural do terreno" },
+        { palavra: "TELESCOPIO", dica: "Instrumento para observar estrelas" },
+        { palavra: "FUTEBOL", dica: "Esporte jogado com bola nos pés" },
+        { palavra: "PINTURA", dica: "Arte feita com tintas" },
+        { palavra: "BIBLIOTECA", dica: "Lugar cheio de livros" },
+        { palavra: "XADREZ", dica: "Jogo de tabuleiro estratégico" },
+        { palavra: "GUITARRA", dica: "Instrumento de cordas" },
+        { palavra: "ELEFANTE", dica: "Maior animal terrestre" },
+        { palavra: "BORBOLETA", dica: "Inseto colorido e voador" },
+        { palavra: "JORNALISTA", dica: "Profissional das notícias" },
+        { palavra: "DENTISTA", dica: "Cuida dos dentes" },
+        { palavra: "GEOGRAFIA", dica: "Estudo do planeta Terra" },
+        { palavra: "ASTRONAUTA", dica: "Profissional que viaja ao espaço" },
+        { palavra: "BARCO", dica: "Meio de transporte aquático" },
+        { palavra: "VULCAO", dica: "Montanha que expele lava" },
+        { palavra: "ESPELHO", dica: "Reflete imagens" },
+        { palavra: "ESCORREGADOR", dica: "Brinquedo de playground" },
+        { palavra: "PIPOCAR", dica: "Estourar como milho no cinema" },
+        { palavra: "OUTONO", dica: "Estação das folhas caindo" },
+        { palavra: "AMIZADE", dica: "Relação de carinho entre amigos" },
+        { palavra: "SABONETE", dica: "Usado para lavar as mãos" },
+        { palavra: "COELHO", dica: "Animal que pula e tem orelhas grandes" },
+        { palavra: "FESTIVAL", dica: "Grande evento cultural" },
+        { palavra: "RELÓGIO", dica: "Serve para ver as horas" },
+        { palavra: "SILENCIO", dica: "Ausência de ruído" },
+        { palavra: "FLORESTA", dica: "Grande área com muitas árvores" },
+        { palavra: "PRATELEIRA", dica: "Serve para colocar objetos" },
+        { palavra: "INVENTOR", dica: "Quem cria novas coisas" },
+        { palavra: "MATEMATICA", dica: "Ciência dos números" },
+        { palavra: "GUAXINIM", dica: "Animal noturno de máscara preta" },
+        { palavra: "FANTASIA", dica: "Imaginário ou roupa de festa" },
+        { palavra: "RELAMPAGO", dica: "Descarga elétrica na tempestade" },
+        { palavra: "VESTIDO", dica: "Peça de roupa feminina" },
+        { palavra: "SORVETE", dica: "Doce gelado" },
+        { palavra: "INSTRUMENTO", dica: "Pode ser musical ou de trabalho" },
+        { palavra: "ELETRICIDADE", dica: "Energia para aparelhos" },
+        { palavra: "FOTOGRAFIA", dica: "Imagem feita com câmera" },
+        { palavra: "FERROVIA", dica: "Trilho para trens" },
+        { palavra: "FLOCO", dica: "Pequeno pedaço como de neve" },
+        { palavra: "PIRAMIDE", dica: "Construção triangular do Egito" },
+        { palavra: "TURISTA", dica: "Pessoa que viaja a lazer" },
+        { palavra: "GIRASSOL", dica: "Planta que segue o sol" },
+        { palavra: "MECANICO", dica: "Profissional que conserta carros" },
+        { palavra: "JANELA", dica: "Abertura em paredes" },
+        { palavra: "CINEMA", dica: "Lugar para ver filmes" },
+        { palavra: "ORIGAMI", dica: "Arte de dobrar papel" },
+        { palavra: "MARTELO", dica: "Ferramenta de bater" },
+        { palavra: "GELADEIRA", dica: "Mantém alimentos frios" },
+        { palavra: "PINGUIM", dica: "Ave que vive no gelo" },
+        { palavra: "CELULAR", dica: "Telefone portátil" },
+        { palavra: "MARCHA", dica: "Movimento de caminhar em grupo" },
+        { palavra: "ESQUELETO", dica: "Estrutura óssea dos animais" },
+        { palavra: "FONE", dica: "Acessório para ouvir música" },
+        { palavra: "ROUPA", dica: "Vestuário em geral" },
+        { palavra: "BOLA", dica: "Objeto redondo usado em esportes" },
+        { palavra: "SERRAS", dica: "Ferramenta para cortar madeira" },
+        { palavra: "ESPIAO", dica: "Profissional de coleta secreta" },
+        { palavra: "COPA", dica: "Competição ou parte de árvore" },
+        { palavra: "LANTERNA", dica: "Serve para iluminar no escuro" },
+        { palavra: "NOVELA", dica: "História longa na TV" },
+        { palavra: "ESCOLA", dica: "Lugar para estudar" },
+        { palavra: "QUADRO", dica: "Objeto para desenhar ou pendurar" },
+        { palavra: "VELA", dica: "Pode ser de aniversário ou de luz" },
+        { palavra: "RELOGIO", dica: "Usado para marcar o tempo" },
+        { palavra: "PONTE", dica: "Serve para atravessar rios" },
+        { palavra: "CRIANÇA", dica: "Pessoa pequena, em crescimento" },
+        { palavra: "MANTEIGA", dica: "Feita do leite, passa no pão" },
+        { palavra: "LETRAS", dica: "Compõem palavras" },
+        { palavra: "VENTILADOR", dica: "Gera vento artificial" },
+        { palavra: "JOGADOR", dica: "Participa de jogos" },
+        { palavra: "FANTASMA", dica: "Ser assustador imaginário" },
+        { palavra: "ESPAGUETE", dica: "Tipo de macarrão longo" },
+        { palavra: "HOSPITAL", dica: "Lugar para cuidar da saúde" },
+        { palavra: "CIENCIA", dica: "Estudo baseado na observação" },
+        { palavra: "MUSEU", dica: "Exibe objetos de valor histórico" },
+        { palavra: "CAMALEAO", dica: "Animal que muda de cor" },
+        { palavra: "BOMBA", dica: "Serve para inflar ou explodir" },
+        { palavra: "CACHORRO", dica: "Melhor amigo do homem" },
+        { palavra: "ROSA", dica: "Tipo de flor" },
+        { palavra: "VIOLINO", dica: "Instrumento de cordas com arco" },
+        { palavra: "AVIAO", dica: "Meio de transporte aéreo" }
+    ];
+    let palavraSecreta = "";
+    let palavraMostrada = "";
+    let dicaAtual = "";
+    let jogoAtivo = true;
+
+    // ... variáveis/globals existentes ...
+    const musica = document.getElementById("musicaFundo");
+
+    function iniciarJogo() {
+        nomeJogador = document.getElementById("nomeJogador").value.trim();
+        if (nomeJogador === "") {
+            alert("Por favor, insira seu nome!");
+            return;
+        }
+        // Esconde a tela inicial e exibe o jogo.
+        document.querySelector('.tela-inicial').style.display = "none";
+        document.querySelector('.container').style.display = "block";
+        // Inicia a música ao começar o jogo
+        musica.currentTime = 0;
+        musica.volume = 0.4; // ajuste o volume se quiser
+        musica.play();
+        // ... restante do seu código ...
+        iniciarPartida();
+    }
+
+    function iniciarPartida() {
+        if (!jogoAtivo) return;
+
+        tentativas = 6;
+        document.getElementById("tentativas").innerText = tentativas;
+        document.getElementById("pontuacao").innerText = pontuacao;
+
+        const sorteio = palavras[Math.floor(Math.random() * palavras.length)];
+        palavraSecreta = sorteio.palavra.toUpperCase();
+        dicaAtual = sorteio.dica;
+        palavraMostrada = "_".repeat(palavraSecreta.length);
+
+        // Mostra a dica
+        document.getElementById("dica").innerText = "Dica: " + dicaAtual;
+        document.getElementById("palavra-secreta").innerText = palavraMostrada.split("").join(" ");
+        criarTeclado();
+        desenharForca(0);
+    }
+
+    function criarTeclado() {
+        const teclado = document.getElementById("teclado");
+        teclado.innerHTML = ""; // Limpa o teclado anterior
+        const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        letras.forEach(letra => {
+            const botao = document.createElement("button");
+            botao.classList.add("key");
+            botao.type = "button"; // <- Evita submit ou problemas de formulário
+            botao.innerText = letra;
+            botao.onclick = function() {
+                if (jogoAtivo) {
+                    tratarCliqueTecla(letra, botao);
+                }
+            };
+            teclado.appendChild(botao);
+        });
+    }
+
+    function tratarCliqueTecla(letra, botao) {
+        botao.disabled = true;
+        if (palavraSecreta.includes(letra)) {
+            atualizarPalavra(letra);
+            botao.style.backgroundColor = "#06d6a0";
+        } else {
+            tentativas--;
+            document.getElementById("tentativas").innerText = tentativas;
+            botao.style.backgroundColor = "#ef476f";
+            desenharForca(6 - tentativas);
+            if (tentativas === 0) {
+                finalizarJogo(false);
+            }
+        }
+    }
+
+    function atualizarPalavra(letra) {
+        // Atualiza a palavra mostrada na tela
+        let novaPalavra = "";
+        for (let i = 0; i < palavraSecreta.length; i++) {
+            if (palavraSecreta[i] === letra) {
+                novaPalavra += letra;
+            } else {
+                novaPalavra += palavraMostrada[i];
+            }
+        }
+        palavraMostrada = novaPalavra;
+        document.getElementById("palavra-secreta").innerText = palavraMostrada.split("").join(" ");
+
+        // Checar se ganhou
+        if (!palavraMostrada.includes("_")) {
+            pontuacao += 10;
+            palavrasAcertadas++;
+            document.getElementById("pontuacao").innerText = pontuacao;
+            document.getElementById("palavrasAcertadas").innerText = palavrasAcertadas;
+
+            // Mostrar mensagem de acerto temporária
+            const mensagem = document.createElement("div");
+            mensagem.className = "message win";
+            mensagem.innerHTML = `🎉 Parabéns, ${nomeJogador}! Você acertou! 🎉`;
+            document.querySelector(".container").appendChild(mensagem);
+
+            // Limpar mensagem após 1.5 segundos e iniciar nova palavra
+            setTimeout(() => {
+                mensagem.remove();
+                iniciarPartida();
+            }, 1500);
+        }
+    }
+
+    function finalizarJogo(ganhou) {
+        jogoAtivo = false;
+        document.querySelector(".message")?.remove();
+        const mensagem = document.createElement("div");
+        mensagem.className = "message";
+
+        if (ganhou) {
+            mensagem.innerHTML = `🎉 Parabéns, ${nomeJogador}! Você acertou! 🎉`;
+            pontuacao += 10;
+        } else {
+            mensagem.innerHTML = `😢 Você perdeu. A palavra era: ${palavraSecreta}<br>Palavras acertadas: ${palavrasAcertadas}`;
+            mensagem.className += " lose";
+            musica.pause();
+        }
+
+        document.querySelector(".container").appendChild(mensagem);
+        document.querySelectorAll(".key").forEach(botao => (botao.disabled = true));
+        document.getElementById("pontuacao").innerText = pontuacao;
+    }
+
+    function reiniciarJogo() {
+        // Para a música quando o jogador para o jogo
+        musica.pause();
+        musica.currentTime = 0;
+        // ... código já existente para reiniciar o jogo ...
+        // Se quiser que a música toque de novo ao recomeçar, chame musica.play() aqui também:
+        iniciarJogo();
+        jogoAtivo = true;
+        pontuacao = 0;
+        palavrasAcertadas = 0;
+        document.getElementById("pontuacao").innerText = pontuacao;
+        document.getElementById("palavrasAcertadas").innerText = palavrasAcertadas;
+        document.querySelector(".message")?.remove();
+        iniciarPartida();
+    }
+
+    function desenharForca(erros) {
+        const svg = document.getElementById("forca-svg");
+        svg.innerHTML = "";
+
+        // Estrutura da forca
+        svg.innerHTML += `
+            <line x1="10" y1="170" x2="110" y2="170" stroke="#61481c" stroke-width="6"/>
+            <line x1="30" y1="170" x2="30" y2="20" stroke="#61481c" stroke-width="6"/>
+            <line x1="27" y1="20" x2="90" y2="20" stroke="#61481c" stroke-width="6"/>
+            <line x1="90" y1="20" x2="90" y2="40" stroke="#61481c" stroke-width="6"/>
+        `;
+
+        // Boneco: desenhar partes de acordo com o número de erros
+        if (erros > 0) {
+            // Cabeça
+            svg.innerHTML += `<circle cx="90" cy="55" r="15" stroke="#333" stroke-width="3" fill="none"/>`;
+        }
+        if (erros > 1) {
+            // Tronco
+            svg.innerHTML += `<line x1="90" y1="70" x2="90" y2="120" stroke="#333" stroke-width="3"/>`;
+        }
+        if (erros > 2) {
+            // Braço esquerdo
+            svg.innerHTML += `<line x1="90" y1="80" x2="70" y2="100" stroke="#333" stroke-width="3"/>`;
+        }
+        if (erros > 3) {
+            // Braço direito
+            svg.innerHTML += `<line x1="90" y1="80" x2="110" y2="100" stroke="#333" stroke-width="3"/>`;
+        }
+        if (erros > 4) {
+            // Perna esquerda
+            svg.innerHTML += `<line x1="90" y1="120" x2="75" y2="150" stroke="#333" stroke-width="3"/>`;
+        }
+        if (erros > 5) {
+            // Perna direita
+            svg.innerHTML += `<line x1="90" y1="120" x2="105" y2="150" stroke="#333" stroke-width="3"/>`;
+        }
+    }
+
+    // Permitir uso do teclado físico
+    document.addEventListener("keydown", function(event) {
+        // Apenas se o jogo estiver ativo (exibe a .container)
+        if (document.querySelector(".container").style.display !== "block" || !jogoAtivo) return;
+        let letra = event.key.toUpperCase();
+
+        // Só consideramos letras A-Z, ignorando acentos e outros caracteres
+        if (letra.length === 1 && letra >= "A" && letra <= "Z") {
+            // Procura o botão correspondente e dispara o clique, se disponível
+            const botao = Array.from(document.querySelectorAll(".key"))
+                .find(b => b.innerText === letra && !b.disabled);
+            if (botao) {
+                botao.click();
+            }
+        }
+    });
+
+    // Opcional: pausa a música se sair da página/janela
+    window.addEventListener('beforeunload', () => {
+        musica.pause();
+    });
+</script>
+</body>
+</html>
