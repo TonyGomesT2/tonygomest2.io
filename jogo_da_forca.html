@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo da Forca Divertido</title>
+    <title>Jogo da Forca</title>
     <style>
         /* Estilo Geral */
         * {
@@ -153,11 +153,13 @@
 <body>
     <!-- Tela Inicial -->
     <div class="tela-inicial">
-        <h2>Olá! Pronto para jogar?</h2>
-        <p>Digite o seu nome:</p>
-        <input type="text" id="nomeJogador" placeholder="Seu nome..." />
-        <button onclick="iniciarJogo()">Começar</button>
-    </div>
+    <h1>Jogo da Forca</h1>
+    <img src="https://i.imgur.com/nMs3Ze8.png" alt="Forca" style="width: 120px; margin-bottom: 20px;">
+    <h2>Olá! Pronto para jogar?</h2>
+    <p>Digite o seu nome:</p>
+    <input type="text" id="nomeJogador" placeholder="Seu nome..." />
+    <button onclick="iniciarJogo()">Começar</button>
+</div>
 
     <!-- Tela do Jogo -->
     <div class="container" style="display: none;">
@@ -283,7 +285,112 @@
         { palavra: "CACHORRO", dica: "Melhor amigo do homem" },
         { palavra: "ROSA", dica: "Tipo de flor" },
         { palavra: "VIOLINO", dica: "Instrumento de cordas com arco" },
-        { palavra: "AVIAO", dica: "Meio de transporte aéreo" }
+        { palavra: "AVIAO", dica: "Meio de transporte aéreo" },
+{ palavra: "ANIVERSARIO", dica: "Data especial de celebração pessoal" },
+{ palavra: "ESTAMPADO", dica: "Roupa decorada com desenhos" },
+{ palavra: "OCULAR", dica: "Relacionado ao olho" },
+{ palavra: "COLETE", dica: "Peça de roupa sem mangas" },
+{ palavra: "ELEVAR", dica: "Aumentar de altura" },
+{ palavra: "LUMINARIA", dica: "Abajur ou pendente para iluminar" },
+{ palavra: "LABIRINTO", dica: "Caminho confuso com muitos corredores" },
+{ palavra: "HISTORIA", dica: "Estudo do passado" },
+{ palavra: "TATUAGEM", dica: "Desenho permanente na pele" },
+{ palavra: "PLANETA", dica: "Corpo celeste que orbita uma estrela" },
+{ palavra: "INVERNO", dica: "Estação fria do ano" },
+{ palavra: "DETETIVE", dica: "Investigador de casos misteriosos" },
+{ palavra: "ALGEMA", dica: "Objetos usados para prender mãos" },
+{ palavra: "ESTANTE", dica: "Similar a prateleira, para livros" },
+{ palavra: "CALCULADORA", dica: "Dispositivo para realizar contas" },
+{ palavra: "CABIDE", dica: "Usado para pendurar roupas" },
+{ palavra: "PLANILHA", dica: "Tabela organizadora de dados" },
+{ palavra: "GAZELA", dica: "Animal rápido da savana africana" },
+{ palavra: "ALFACE", dica: "Folha verde muito utilizada em salada" },
+{ palavra: "TIGELA", dica: "Vasilha arredondada para alimentos" },
+{ palavra: "MINERAL", dica: "Substância natural inorgânica" },
+{ palavra: "CORAÇÃO", dica: "Órgão vital do corpo humano" },
+{ palavra: "LANTERNA", dica: "Fonte portátil de luz" },
+{ palavra: "FEBRE", dica: "Sintoma de calor corporal elevado" },
+{ palavra: "ESCOTEIRO", dica: "Jovem participante de atividades ao ar livre" },
+{ palavra: "PRANCHA", dica: "Usada no surfe" },
+{ palavra: "DINAMARCA", dica: "País nórdico europeu" },
+{ palavra: "TRAVESSEIRO", dica: "Apoio usado sob a cabeça ao dormir" },
+{ palavra: "TESTEMUNHA", dica: "Pessoa que viu um acontecimento" },
+{ palavra: "HORIZONTE", dica: "Linha onde céu e terra se encontram" },
+{ palavra: "CINTO", dica: "Acessório para segurar calças" },
+{ palavra: "LUAU", dica: "Festa à noite na praia" },
+{ palavra: "CARDUME", dica: "Grupo de peixes" },
+{ palavra: "ALUGUEL", dica: "Pagamento para uso de algo por tempo limitado" },
+{ palavra: "CHUVEIRO", dica: "Dispensa água para banho" },
+{ palavra: "BARULHO", dica: "Ruído alto ou incômodo" },
+{ palavra: "NAVIO", dica: "Grande embarcação aquática" },
+{ palavra: "CADERNO", dica: "Livro para anotações" },
+{ palavra: "VIOLINO", dica: "Instrumento musical de cordas" },
+{ palavra: "PALETA", dica: "Ferramenta para misturar tintas" },
+{ palavra: "CANGURU", dica: "Animal que pula e mora na Austrália" },
+{ palavra: "MATILHA", dica: "Grupo de cães" },
+{ palavra: "TELHADO", dica: "Cobertura de casas" },
+{ palavra: "CEREJA", dica: "Fruta vermelha e pequena" },
+{ palavra: "BALEIA", dica: "Maior animal marinho" },
+{ palavra: "COFRE", dica: "Local seguro para guardar dinheiro" },
+{ palavra: "CENARIO", dica: "Ambiente de uma peça teatral" },
+{ palavra: "FRAGMENTO", dica: "Parte de algo quebrado" },
+{ palavra: "HERANCA", dica: "Bens deixados por falecidos" },
+{ palavra: "CHAPEU", dica: "Acessório para a cabeça" },
+{ palavra: "SORRISO", dica: "Expressão de felicidade" },
+{ palavra: "SALGADO", dica: "Comida que contém sal" },
+{ palavra: "PIMENTA", dica: "Alimento ardido" },
+{ palavra: "FOLHA", dica: "Parte de plantas geralmente verde" },
+{ palavra: "IMPRESSORA", dica: "Aparelho que imprime documentos" },
+{ palavra: "CACHORRO", dica: "Animal doméstico amigo do homem" },
+{ palavra: "MILHO", dica: "Grão amarelo em espiga" },
+{ palavra: "ENGENHEIRO", dica: "Profissional que projeta e constrói" },
+{ palavra: "PIPOCA", dica: "Milho estourado de cinema" },
+{ palavra: "SALARIO", dica: "Dinheiro recebido pelo trabalho" },
+{ palavra: "CHAVEIRO", dica: "Objeto para organizar chaves" },
+{ palavra: "FONTE", dica: "De onde surge água ou energia" },
+{ palavra: "PATO", dica: "Ave de bico achatado" },
+{ palavra: "JORNAL", dica: "Publicação diária de notícias" },
+{ palavra: "ALMOFADA", dica: "Apoio macio para sofá" },
+{ palavra: "FRAMBOESA", dica: "Fruta vermelha pequena" },
+{ palavra: "PASSAGEIRO", dica: "Quem viaja em veículo" },
+{ palavra: "SEMÁFORO", dica: "Controla cruzamentos nas ruas" },
+{ palavra: "NANOMETRO", dica: "Unidade de medida muito pequena" },
+{ palavra: "ESMERALDA", dica: "Pedra preciosa verde" },
+{ palavra: "ECONOMIA", dica: "Ciência das finanças" },
+{ palavra: "ENFERMEIRA", dica: "Cuida dos pacientes em hospitais" },
+{ palavra: "ERVILHA", dica: "Leguminosa redonda e verde" },
+{ palavra: "MEIOFIO", dica: "Borda da calçada" },
+{ palavra: "ANDORINHA", dica: "Pássaro migratório pequeno" },
+{ palavra: "ALICATE", dica: "Ferramenta de pegar e cortar" },
+{ palavra: "PEDAGOGIA", dica: "Ciência da educação" },
+{ palavra: "CUPIDO", dica: "Simbólico deus do amor" },
+{ palavra: "TURBANTE", dica: "Peça de tecido na cabeça" },
+{ palavra: "COTOVELO", dica: "Articulação do braço" },
+{ palavra: "CELULAR", dica: "Telefone portátil" },
+{ palavra: "FILÉ", dica: "Corte de carne macia" },
+{ palavra: "MÁSCARA", dica: "Cobre o rosto, usada em festas" },
+{ palavra: "PASSAGEM", dica: "Bilhete ou entrada" },
+{ palavra: "TECIDOS", dica: "Matérias-primas de roupas" },
+{ palavra: "PAISAGEM", dica: "Vista de um local" },
+{ palavra: "ACADEMIA", dica: "Local para atividades físicas" },
+{ palavra: "CASCATA", dica: "Queda d’água artificial" },
+{ palavra: "MICROFONE", dica: "Amplifica a voz" },
+{ palavra: "OFICINA", dica: "Ambiente para consertos" },
+{ palavra: "CANTINA", dica: "Local para comer na escola" },
+{ palavra: "BISNAGA", dica: "Tubo de plástico maleável" },
+{ palavra: "POSTAGEM", dica: "Conteúdo publicado online" },
+{ palavra: "BIBELÔ", dica: "Pequeno objeto decorativo" },
+{ palavra: "PÁLIDO", dica: "Com pouca cor" },
+{ palavra: "CUBO", dica: "Figura geométrica de 6 faces iguais" },
+{ palavra: "INSTINTO", dica: "Ação sem raciocínio consciente" },
+{ palavra: "BROTO", dica: "Filho novo das plantas" },
+{ palavra: "ZELADOR", dica: "Cuida de prédio ou escola" },
+{ palavra: "ADIUS", dica: "Palavra de despedida" },
+{ palavra: "VITRINE", dica: "Vidro para expor produtos" },
+{ palavra: "CASQUINHA", dica: "Sorvete servido em cone" },
+{ palavra: "PISTA", dica: "Espaço onde se corre ou dança" },
+{ palavra: "BRINQUEDO", dica: "Usado por crianças para brincar" },
+{ palavra: "QUADRO", dica: "Obra de arte em moldura" }
     ];
     let palavraSecreta = "";
     let palavraMostrada = "";
