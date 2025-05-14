@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo da Forca Divertido</title>
+    <title>Jogo da Forca</title>
     <style>
         /* Estilo Geral */
         * {
@@ -439,7 +439,7 @@
     function criarTeclado() {
         const teclado = document.getElementById("teclado");
         teclado.innerHTML = ""; // Limpa o teclado anterior
-        const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZÇ".split("");
+        const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZÇÁÉÍÓÂÊÔÃÕ".split("");
         letras.forEach(letra => {
             const botao = document.createElement("button");
             botao.classList.add("key");
